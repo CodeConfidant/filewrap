@@ -2,6 +2,15 @@
 
     A Python module that wraps functionality from the os module for file system manipulation and management.
 
+    Make sure to have the latest version of Python 3 installed although this should work with previous versions. 
+    Pip and git also need to be installed for module installation with command line.  
+
+    To install/update the module with pip enter command in terminal:
+        pip install git+https://github.com/CodeConfidant/filewrap-os.git#egg=filewrap-os
+
+    To uninstall the module with pip enter command in terminal:
+        pip uninstall filewrap
+
 <table width="100%">
 	<tr>
 		<th align="left">
@@ -167,6 +176,24 @@
         </td>
 		<td>
             Return boolean value (True or False) to check if a single file path exists. <br/>
+            The filepath argument must be a string.
+        </td>
+	</tr>
+    <tr>
+		<td>
+            <code>isfile(filepath)</code>
+        </td>
+		<td>
+            Return boolean value (True or False) to check if filepath argument is a file. <br/>
+            The filepath argument must be a string.
+        </td>
+	</tr>
+    <tr>
+		<td>
+            <code>isdir(filepath)</code>
+        </td>
+		<td>
+            Return boolean value (True or False) to check if filepath argument is a directory. <br/>
             The filepath argument must be a string.
         </td>
 	</tr>
