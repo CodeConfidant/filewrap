@@ -26,7 +26,7 @@ def copydir(destination_path, target_path):
     filepaths = list([])
     working_dir = wdir()
     
-    for root, dirs, files in os.walk(target_path, topdown=False):
+    for root, dirs, files in os.walk(target_path, topdown=True):
         for path in dirs:
             dirpaths.append(str(os.path.join(root, path)))
         for path in files:
@@ -42,19 +42,15 @@ def copydir(destination_path, target_path):
     chdir(working_dir)
 
     for filepath in filepaths:
-        copyfile("b", destination_path, filepath)
+        copyfile(destination_path, filepath)
 
-# Copy single/multiple text/binary based files to destination directory.
-# The mode argument must be either strings: "t" (text) or "b" (binary).
+# Copy single/multiple files to destination directory.
 # The destination_path and *filepaths arguments must be strings.
-def copyfile(mode, destination_path, *filepaths):
+def copyfile(destination_path, *filepaths):
     working_directory = wdir()
 
     if (type(destination_path) is not str):
         raise TypeError("The given file path " + str(destination_path) + " isn't a string!")
-
-    if (type(mode) is not str):
-        raise TypeError("The given mode " + str(mode) + " isn't a string!")
 
     if (path_exists(destination_path) == False):
         raise FileNotFoundError("The given file path " + str(destination_path) + " doesn't exist!")
@@ -62,11 +58,8 @@ def copyfile(mode, destination_path, *filepaths):
     if (isdir(destination_path) == False):
         raise ValueError("The given file path " + str(destination_path) + " isn't a directory!")
 
-    if (mode != "t" and mode != "b"):
-        raise ValueError("The mode is of the incorrect value! It must either strings: 't' (text) or 'b' (binary)")
-
     for filepath in filepaths:
-        if (filepath != str(filepath)):
+        if (type(filepath) is not str):
             raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
         if (path_exists(filepath) == False):
@@ -76,11 +69,9 @@ def copyfile(mode, destination_path, *filepaths):
             raise ValueError("The given file path " + str(filepath) + " isn't a file!")
 
         print("Copying:", filepath, "to", destination_path)    
-        lines = mklist(mode, filepath)
-        chdir(destination_path)
-        mkfile(mode, filepath)
-        writelines(mode, filepath, lines)
-        chdir(working_directory)
+        lines = mklist("b", filepath)
+        mkfile("b", os.path.join(destination_path, filepath))
+        writelines("b", os.path.join(destination_path, filepath), lines)
         print("Copy Success:", filepath, "copied to", destination_path)
 
 # Read and print lines in single/multiple text/binary based files.

@@ -30,11 +30,10 @@
 	</tr>
     <tr>
 		<td>
-            <code>copyfile(mode, destination_path, *filepaths)</code>
+            <code>copyfile(destination_path, *filepaths)</code>
         </td>
 		<td>
             Copy single/multiple text/binary based files to destination directory. <br/>
-            The mode argument must be either strings: "t" (text) or "b" (binary). <br/>
             The destination_path and *filepaths arguments must be strings.
         </td>
 	</tr>
