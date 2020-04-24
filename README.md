@@ -25,7 +25,7 @@
             <code>copydir(destination_path, target_path)</code>
         </td>
 		<td>
-           Recursively copy target directory and all of it's subdirectories/files to a destination directory.
+            Copy target directory and all of it's subdirectories/files to a destination directory.
         </td>
 	</tr>
     <tr>
@@ -33,7 +33,7 @@
             <code>copyfile(destination_path, *filepaths)</code>
         </td>
 		<td>
-            Copy single/multiple text/binary based files to destination directory. <br/>
+            Copy single/multiple files to destination directory. <br/>
             The destination_path and *filepaths arguments must be strings.
         </td>
 	</tr>
