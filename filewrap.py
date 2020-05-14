@@ -79,7 +79,7 @@ def copyfile(destination_path, *filepaths):
 # The *filepaths arguments must be strings. 
 def rpfile(mode, *filepaths):
     for filepath in filepaths:         
-        if (filepath != str(filepath)):
+        if (type(filepath) is not str):
             raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
         if (type(mode) is not str):
@@ -107,7 +107,7 @@ def rpfile(mode, *filepaths):
 # The *filepaths arguments must be strings.
 def rmfile(*filepaths):
     for filepath in filepaths:
-        if (filepath != str(filepath)):
+        if (type(filepath) is not str):
             raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
         if (path_exists(filepath) == False):
@@ -125,7 +125,7 @@ def rmfile(*filepaths):
 # The *filepaths arguments must be strings.
 def mkfile(mode, *filepaths):
     for filepath in filepaths:
-        if (filepath != str(filepath)):
+        if (type(filepath) is not str):
             raise TypeError("The given file path " + str(filepath) + " isn't a string!")
             
         if (type(mode) is not str):
@@ -145,7 +145,7 @@ def mkfile(mode, *filepaths):
 # The *filepaths arguments must be strings.
 def rmdir(*filepaths):
     for filepath in filepaths:
-        if (filepath != str(filepath)):
+        if (type(filepath) is not str):
             raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
         if (path_exists(filepath) == False):
@@ -194,7 +194,7 @@ def rmall(dirpath):
 # The *filepaths arguments must be strings.
 def mkdir(*filepaths):
     for filepath in filepaths:
-        if (filepath != str(filepath)):
+        if (type(filepath) is not str):
             raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
         if (path_exists(filepath) == True):
@@ -204,20 +204,19 @@ def mkdir(*filepaths):
         os.mkdir(filepath)
         print("Creation Success:", filepath, "Created!")
 
-# Output to terminal the filenames/subdirectories in single/multiple directories. 
+# Output to terminal the file/subdirectory names of single/multiple argument filepaths.
 # Use no arguments for working directory only.
 # The *filepaths arguments must be strings. 
-def lsdir(*filepaths):
+def rpdir(*filepaths):
     if (len(filepaths) == 0):
-        directory = os.listdir() 
+        directory = list(lsdir())
         print(" -------------------", "\n", "Directory - Working", "\n", "-------------------")
 
         for file in directory:
-            print("-", file)
-        
+            print("-", file)        
     else: 
         for filepath in filepaths:
-            if (filepath != str(filepath)):
+            if (type(filepath) is not str):
                 raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
             if (path_exists(filepath) == False):
@@ -226,16 +225,54 @@ def lsdir(*filepaths):
             if (isdir(filepath) == False):
                 raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
                 
-            directory = os.listdir(filepath)
+            directory = list(lsdir(filepath))
             print(" -------------------", "\n", "Directory - ", filepath.strip("../"), "\n", "-------------------")
 
             for file in directory:
                 print("-", file)
 
+# Return a list with file/subdirectory names of the single/multiple argument filepaths.
+# If there are no arguments used in *filepaths, a list of the contents within the working directory is returned.
+# If there is only one argument used in *filepaths, a list of the contents of only that directory is returned. 
+# Using the method with two or more arguments in *filepaths will return a list of lists with each list containing the file/subdirectory names of that filepath argument.
+def lsdir(*filepaths):
+    if (len(filepaths) == 0):
+        return list(os.listdir())
+    elif (len(filepaths) == 1):
+        if (type(filepaths) is not str):
+            raise TypeError("The given file path " + str(filepaths) + " isn't a string!")
+
+        if (path_exists(filepaths) == False):
+            raise FileNotFoundError("The given file path " + str(filepaths) + " doesn't exist!")
+
+        if (isdir(filepaths) == False):
+            raise ValueError("The given file path " + str(filepaths) + " isn't a directory!")
+
+        return list(os.listdir(filepaths))
+    else:
+        finalList = list()
+
+        for filepath in filepaths:
+            fileList = list()
+
+            if (type(filepath) is not str):
+                raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+
+            if (path_exists(filepath) == False):
+                raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+
+            if (isdir(filepath) == False):
+                raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
+
+            for file in os.listdir(filepath):
+                fileList.append(file)
+
+            finalList.append(fileList)
+
 # Change current working directory.
 # The filepath argument must be a string. 
 def chdir(filepath):
-    if (filepath != str(filepath)):
+    if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
     if (path_exists(filepath) == False and filepath != ".."):
@@ -248,7 +285,7 @@ def chdir(filepath):
 
 # Return string of the path of the current working directory. 
 def wdir():
-    return os.getcwd()
+    return str(os.getcwd())
 
 # Print working directory to terminal. 
 def pwdir():
@@ -268,7 +305,7 @@ def mklist(mode, *filepaths):
         raise ValueError("The mode is of the incorrect value! It must either strings: 't' (text) or 'b' (binary)")
         
     for filepath in filepaths:
-        if (filepath != str(filepath)):
+        if (type(filepath) is not str):
             raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
         if (path_exists(filepath) == False):
@@ -298,7 +335,7 @@ def writelines(mode, filepath, *lines):
     j = int(0)
     i = int(0)
 
-    if (filepath != str(filepath)):
+    if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
     if (type(mode) is not str):
@@ -380,7 +417,7 @@ def writelines(mode, filepath, *lines):
 def appendlines(mode, filepath, *lines):
     i = int(0)
 
-    if (filepath != str(filepath)):
+    if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
     if (type(mode) is not str):
@@ -439,7 +476,7 @@ def appendlines(mode, filepath, *lines):
 # The mode argument value can be one of the following strings: "rt", "at", "wt", "rb", "ab", "wb"
 # The filepath argument must be a string. 
 def attrfile(mode, filepath):
-    if (filepath != str(filepath)):
+    if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
     if (type(mode) is not str):
@@ -460,9 +497,9 @@ def attrfile(mode, filepath):
             "fileNumber": new_file.fileno(),
             "fileMode": mode,
             "fileStreamInteractive": new_file.isatty(),
-            "fileSeekability": new_file.seekable(),
-            "fileReadability": new_file.readable(),
-            "fileWritability": new_file.writable()
+            "fileSeekAbility": new_file.seekable(),
+            "fileReadAbility": new_file.readable(),
+            "fileWriteAbility": new_file.writable()
         })
         new_file.close()
         return fileAttributes
@@ -470,7 +507,7 @@ def attrfile(mode, filepath):
 # Return boolean value (True or False) to check if a single file path exists.
 # The filepath argument must be a string.
 def path_exists(filepath):  
-    if (filepath != str(filepath)):
+    if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
     if (os.path.exists(filepath) == True):
@@ -481,7 +518,7 @@ def path_exists(filepath):
 # Return boolean value (True or False) to check if filepath argument is a file.
 # The filepath argument must be a string.
 def isfile(filepath):
-    if (filepath != str(filepath)):
+    if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
     if (os.path.isfile(filepath) == True):
@@ -492,7 +529,7 @@ def isfile(filepath):
 # Return boolean value (True or False) to check if filepath argument is a directory.
 # The filepath argument must be a string.
 def isdir(filepath):
-    if (filepath != str(filepath)):
+    if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
     if (os.path.isdir(filepath) == True):
@@ -514,14 +551,23 @@ def ren(current_filepath, desired_filepath):
     i = int(0)
 
     if (type(current_filepath) is str and type(desired_filepath) is not str):
-        raise TypeError("The first argument is a string, the second argument must be a string!")
+        raise TypeError("The current_filepath argument is a string, the desired_filepath argument must be a string!")
+
+    if (type(current_filepath) is not str and type(desired_filepath) is str):
+        raise TypeError("The desired_filepath argument is a string, the current_filepath argument must be a string!")
 
     if (type(current_filepath) is list and type(desired_filepath) is not list):
-        raise TypeError("The first argument is a list, the second argument must be a list!")
+        raise TypeError("The current_filepath argument is a list, the desired_filepath argument must be a list!")
+
+    if (type(current_filepath) is not list and type(desired_filepath) is list):
+        raise TypeError("The desired_filepath argument is a list, the current_filepath argument must be a list!")
         
     if (type(current_filepath) is str and type(desired_filepath) is str):
         if (path_exists(current_filepath) == False):
             raise FileNotFoundError("The given file path " + str(current_filepath) + " doesn't exist!")
+
+        if (path_exists(desired_filepath) == True):
+            raise FileExistsError("The given file path " + str(desired_filepath) + " already exists!")
 
         print("Renaming:", current_filepath, "as", desired_filepath)
         os.rename(current_filepath, desired_filepath)
@@ -540,6 +586,9 @@ def ren(current_filepath, desired_filepath):
 
             if (path_exists(current_filepath[i]) == False):
                 raise FileNotFoundError("The given file path " + str(current_filepath[i]) + " doesn't exist!")
+
+            if (path_exists(desired_filepath[i]) == True):
+                raise FileExistsError("The given file path " + str(desired_filepath[i]) + " already exists!")
 
             print("Renaming:", current_filepath[i], "as", desired_filepath[i])
             os.rename(current_filepath[i], desired_filepath[i])

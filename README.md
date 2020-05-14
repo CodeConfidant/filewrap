@@ -95,12 +95,23 @@
 	</tr>
     <tr>
 		<td>
+            <code>rpdir(*filepaths)</code>
+        </td>
+		<td>
+            Output to terminal the file/subdirectory names of single/multiple argument filepaths. <br/>
+            Use no arguments for working directory only. <br/>
+            The *filepaths arguments must be strings.
+        </td>
+	</tr>
+    <tr>
+		<td>
             <code>lsdir(*filepaths)</code>
         </td>
 		<td>
-            Output to terminal the filenames/subdirectories in single/multiple directories. <br/>
-            Use no arguments for working directory only. <br/>
-            The *filepaths arguments must be strings.
+            Return a list with file/subdirectory names of the single/multiple argument filepaths. <br/>
+            If there are no arguments used in *filepaths, a list of the contents within the working directory is returned. <br/>
+            If there is only one argument used in *filepaths, a list of the contents of only that filepath directory is returned. <br/>
+            Using the method with two or more arguments in *filepaths will return a list of lists with each list containing the file/subdirectory names of that filepath argument.
         </td>
 	</tr>
     <tr>

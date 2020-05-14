@@ -37,9 +37,14 @@ rmall(dirpath) 	                        Delete single directory along with it's 
 mkdir(*filepaths) 	                    Make single/multiple directories.
                                         The *filepaths arguments must be strings.
 
-lsdir(*filepaths) 	                    Output to terminal the filenames/subdirectories in single/multiple directories.
-                                        Use no arguments for working directory only.
+rpdir(*filepaths)	                    Output to terminal the file/subdirectory names of single/multiple argument filepaths. 
+                                        Use no arguments for working directory only. 
                                         The *filepaths arguments must be strings.
+
+lsdir(*filepaths)	                    Return a list with file/subdirectory names of the single/multiple argument filepaths. 
+                                        If there are no arguments used in *filepaths, a list of the contents within the working directory is returned. 
+                                        If there is only one argument used in *filepaths, a list of the contents of only that filepath directory is returned. 
+                                        Using the method with two or more arguments in *filepaths will return a list of lists with each list containing the file/subdirectory names of that filepath argument.
 
 chdir(filepath) 	                    Change current working directory.
                                         The filepath argument must be a string.

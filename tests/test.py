@@ -45,7 +45,7 @@ filewrap.ren(dirpath, "demo-renamed")
 input("Press enter to continue:")
 
 # Output to terminal the file/subdirectory names of the working directory.
-filewrap.lsdir()
+filewrap.rpdir()
 
 # Print a dictionary of information about the demo.txt file.
 print("File Attributes:", filewrap.attrfile("rt", filepath), sep=" ")
