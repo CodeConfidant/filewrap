@@ -269,6 +269,8 @@ def lsdir(*filepaths):
 
             finalList.append(fileList)
 
+        return finalList
+
 # Change current working directory.
 # The filepath argument must be a string. 
 def chdir(filepath):
