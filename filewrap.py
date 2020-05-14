@@ -2,7 +2,7 @@
 
 import os
 
-# Recursively copy target directory and all of it's subdirectories/files to a destination directory.
+# Copy target directory and all of it's subdirectories/files to a destination directory.
 def copydir(destination_path, target_path):
     if (type(destination_path) is not str):
         raise TypeError("The given file path " + str(destination_path) + " isn't a string!")
