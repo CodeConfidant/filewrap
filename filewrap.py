@@ -239,16 +239,16 @@ def lsdir(*filepaths):
     if (len(filepaths) == 0):
         return list(os.listdir())
     elif (len(filepaths) == 1):
-        if (type(filepaths) is not str):
-            raise TypeError("The given file path " + str(filepaths) + " isn't a string!")
+        if (type(filepaths[0]) is not str):
+            raise TypeError("The given file path " + str(filepaths[0]) + " isn't a string!")
 
-        if (path_exists(filepaths) == False):
-            raise FileNotFoundError("The given file path " + str(filepaths) + " doesn't exist!")
+        if (path_exists(filepaths[0]) == False):
+            raise FileNotFoundError("The given file path " + str(filepaths[0]) + " doesn't exist!")
 
-        if (isdir(filepaths) == False):
-            raise ValueError("The given file path " + str(filepaths) + " isn't a directory!")
+        if (isdir(filepaths[0]) == False):
+            raise ValueError("The given file path " + str(filepaths[0]) + " isn't a directory!")
 
-        return list(os.listdir(filepaths))
+        return list(os.listdir(filepaths[0]))
     else:
         finalList = list()
 
