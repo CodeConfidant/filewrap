@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os
+import os, tarfile, gzip, zipfile, zlib
 
 # Copy target directory and all of it's subdirectories/files to a destination directory.
 def copydir(destination_path, target_path):
@@ -24,7 +24,7 @@ def copydir(destination_path, target_path):
 
     dirpaths = list([target_path])
     filepaths = list([])
-    working_dir = wdir()
+    working_directory = wdir()
     
     for root, dirs, files in os.walk(target_path, topdown=True):
         for path in dirs:
@@ -39,7 +39,7 @@ def copydir(destination_path, target_path):
     for dirpath in dirpaths:
         mkdir(dirpath)
 
-    chdir(working_dir)
+    chdir(working_directory)
 
     for filepath in filepaths:
         copyfile(destination_path, filepath)
@@ -539,6 +539,28 @@ def isdir(filepath):
     elif (os.path.isdir(filepath) == False):
         return False
 
+# Return boolean value (True or False) to check if filepath argument is a tar archive.
+# The filepath argument must be a string.
+def istar(filepath):
+    if (type(filepath) is not str):
+        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+
+    if (tarfile.is_tarfile(filepath) == True):
+        return True
+    elif (tarfile.is_tarfile(filepath) == False):
+        return False
+
+# Return boolean value (True or False) to check if filepath argument is a zip archive.
+# The filepath argument must be a string.
+def iszip(filepath):
+    if (type(filepath) is not str):
+        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+
+    if (zipfile.is_zipfile(filepath) == True):
+        return True
+    elif (zipfile.is_zipfile(filepath) == False):
+        return False
+
 '''
     Rename single/multiple files or directories.
     
@@ -596,3 +618,109 @@ def ren(current_filepath, desired_filepath):
             os.rename(current_filepath[i], desired_filepath[i])
             print("Rename Success:", current_filepath[i], "renamed as", desired_filepath[i])
             i += 1
+
+# Create a tar archive with gzip compression & .gz extension.
+def tar_wrap(filepath):
+    arcpath = str(filepath + ".tar.gz")
+    dirpaths = list([])
+    filepaths = list([])
+
+    if (type(filepath) is not str):
+        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+
+    if (path_exists(filepath) == False):
+        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+
+    if (isdir(filepath) == False):
+        raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
+
+    if (path_exists(arcpath) == True):
+        raise FileExistsError("The archive" + arcpath + "already exists!")
+
+    for root, dirs, files in os.walk(filepath, topdown=True):
+        for path in dirs:
+            dirpaths.append(str(os.path.join(root, path)))
+        for path in files:
+            filepaths.append(str(os.path.join(root, path)))
+
+    dirpaths.sort(); filepaths.sort()
+
+    with tarfile.open(name=arcpath, mode='w:gz') as archive:
+        for file in dirpaths:
+            archive.add(file, recursive=False)
+
+        for file in filepaths:
+            archive.add(file, recursive=False)
+
+        archive.close()
+
+# Extract a tar gzip archive contents to working directory.
+def tar_extract(filepath):
+    if (type(filepath) is not str):
+        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+
+    if (path_exists(filepath) == False):
+        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+
+    if (istar(filepath) == False or str(filepath).endswith(".tar.gz") == False):
+        raise FileNotFoundError("The given file path isn't a .tar.gz archive!")
+
+    if (path_exists(str(filepath).strip(".tar.gz")) == True):
+        raise FileExistsError("The extraction directory already exists!")
+
+    with tarfile.open(name=filepath, mode='r:gz') as archive:
+        archive.extractall()
+        archive.close()
+
+# Create a zip archive with DEFLATE compression.
+def zip_wrap(filepath):
+    arcpath = str(filepath + ".zip")
+    dirpaths = list([])
+    filepaths = list([])
+
+    if (type(filepath) is not str):
+        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+
+    if (path_exists(filepath) == False):
+        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+
+    if (isdir(filepath) == False):
+        raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
+
+    if (path_exists(arcpath) == True):
+        raise FileExistsError("The archive" + arcpath + "already exists!")
+
+    for root, dirs, files in os.walk(filepath, topdown=True):
+        for path in dirs:
+            dirpaths.append(str(os.path.join(root, path)))
+        for path in files:
+            filepaths.append(str(os.path.join(root, path)))
+
+    dirpaths.sort(); filepaths.sort()
+
+    with zipfile.ZipFile(arcpath, mode="w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for file in dirpaths:
+            archive.write(file)
+
+        for file in filepaths:
+            archive.write(file)
+
+        archive.close()
+
+# Extract a zip archive contents to working directory.
+def zip_extract(filepath):
+    if (type(filepath) is not str):
+        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+
+    if (path_exists(filepath) == False):
+        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+
+    if (iszip(filepath) == False or str(filepath).endswith(".zip") == False):
+        raise FileNotFoundError("The given file path isn't a .zip archive!")
+
+    if (path_exists(str(filepath).strip(".tar.gz")) == True):
+        raise FileExistsError("The extraction directory already exists!")
+
+    with zipfile.ZipFile(filepath, mode="r", compression=zipfile.ZIP_DEFLATED) as archive:
+        archive.extractall()
+        archive.close()
