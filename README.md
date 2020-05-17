@@ -209,6 +209,24 @@
 	</tr>
     <tr>
 		<td>
+            <code>istar(filepath)</code>
+        </td>
+		<td>
+            Return boolean value (True or False) to check if filepath argument is a tar archive. <br/>
+            The filepath argument must be a string.
+        </td>
+	</tr>
+    <tr>
+		<td>
+            <code>iszip(filepath)</code>
+        </td>
+		<td>
+            Return boolean value (True or False) to check if filepath argument is a zip archive. <br/>
+            The filepath argument must be a string.
+        </td>
+	</tr>
+    <tr>
+		<td>
             <code>ren(current_filepath, desired_filepath)</code>
         </td>
 		<td>
@@ -220,6 +238,38 @@
                 <li>Two strings</li>
                 <li>Two lists of equal length consisting of strings</li>
             </ul>
+        </td>
+	</tr>
+    <tr>
+		<td>
+            <code>tar_wrap(filepath)</code>
+        </td>
+		<td>
+            Create a tar archive with gzip compression & .gz extension.
+        </td>
+	</tr>
+    <tr>
+		<td>
+            <code>tar_extract(filepath)</code>
+        </td>
+		<td>
+            Extract a tar gzip archive contents to working directory.
+        </td>
+	</tr>
+     <tr>
+		<td>
+            <code>zip_wrap(filepath)</code>
+        </td>
+		<td>
+            Create a zip archive with DEFLATE compression.
+        </td>
+	</tr>
+    <tr>
+		<td>
+            <code>zip_extract(filepath)</code>
+        </td>
+		<td>
+            Extract a zip archive contents to working directory.
         </td>
 	</tr>
 </table>
