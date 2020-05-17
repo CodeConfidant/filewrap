@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Setup python package - python setup.py sdist
 
 from setuptools import setup
 
@@ -7,7 +8,7 @@ setup(
     version='0.1',
     py_modules=['filewrap'],
     license='MIT',
-    description='A Python module that wraps functionality from the os module for file system manipulation and management.',
+    description='A Python module for file/archive manipulation & management.',
     long_description=open('README.txt').read(),
     url='https://github.com/CodeConfidant/filewrap-os',
     author='Drew Hainer',
