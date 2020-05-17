@@ -1,6 +1,6 @@
 filewrap
 
-A Python module that wraps functionality from the os module for file system manipulation and management.
+A Python module for file/archive manipulation & management.
 
 Make sure to have the latest version of Python 3 installed although this should work with previous versions. 
 Pip and git also need to be installed for module installation with command line.  
@@ -10,6 +10,8 @@ To install/update the module with pip enter command in terminal:
 
 To uninstall the module with pip enter command in terminal:
     pip uninstall filewrap
+
+Built-in modules used: os, tarfile, gzip, zipfile, zlib
 
 Method 	                                Description
 copydir(destination_path, target_path) 	Copy target directory and all of it's subdirectories/files to a destination directory.
@@ -79,9 +81,23 @@ isfile(filepath) 	                    Return boolean value (True or False) to ch
 isdir(filepath) 	                    Return boolean value (True or False) to check if filepath argument is a directory.
                                         The filepath argument must be a string.
 
+istar(filepath) 	                    Return boolean value (True or False) to check if filepath argument is a tar archive.
+                                        The filepath argument must be a string.
+
+iszip(filepath) 	                    Return boolean value (True or False) to check if filepath argument is a zip archive.
+                                        The filepath argument must be a string. 
+
 ren(current_filepath, desired_filepath) Rename single/multiple files or directories.
                                         current_filepath represents the file path's name being changed.
                                         desired_filepath represents the file path's new intended name.
                                         current_filepath and desired_filepath can either be:
                                             Two strings
                                             Two lists of equal length consisting of strings
+
+tar_wrap(filepath) 	                    Create a tar archive with gzip compression & .gz extension.
+
+tar_extract(filepath) 	                Extract a tar gzip archive contents to working directory.
+
+zip_wrap(filepath) 	                    Create a zip archive with DEFLATE compression.
+
+zip_extract(filepath) 	                Extract a zip archive contents to working directory.

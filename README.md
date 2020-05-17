@@ -1,7 +1,6 @@
 # ***filewrap***
 
     A Python module for file/archive manipulation & management.
-    Built-in modules used: os, tarfile, gzip, zipfile, zlib
 
     Make sure to have the latest version of Python 3 installed although this should work with previous versions. 
     Pip and git also need to be installed for module installation with command line.  
@@ -11,6 +10,8 @@
 
     To uninstall the module with pip enter command in terminal:
         pip uninstall filewrap
+
+    Built-in modules used: os, tarfile, gzip, zipfile, zlib
 
 <table width="100%">
 	<tr>
