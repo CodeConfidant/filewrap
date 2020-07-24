@@ -3,7 +3,6 @@
     A Python module for file/archive manipulation & management.
 
     Make sure to have the latest version of Python 3 installed although this should work with previous versions. 
-    Pip and git also need to be installed for module installation with command line.  
 
     To install/update the module with pip enter command in terminal:
         pip install git+https://github.com/CodeConfidant/filewrap-os.git#egg=filewrap-os
