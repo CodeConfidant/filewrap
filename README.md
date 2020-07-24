@@ -1,13 +1,13 @@
 # ***filewrap***
 
-    A Python module for file/archive manipulation & management.
+    A Python package for file/archive manipulation & management.
 
     Make sure to have the latest version of Python 3 installed although this should work with previous versions. 
 
-    To install/update the module with pip enter command in terminal:
+    To install/update the package with pip enter command in terminal:
         pip install filewrap
 
-    To uninstall the module with pip enter command in terminal:
+    To uninstall the package with pip enter command in terminal:
         pip uninstall filewrap
 
     Built-in modules used: os, tarfile, gzip, zipfile, zlib

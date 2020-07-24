@@ -10,6 +10,7 @@ setup(
     license='MIT',
     description='A Python package for file/archive manipulation & management.',
     long_description=open('README.txt').read(),
+    long_description_content_type='text/markdown',
     url='https://github.com/CodeConfidant/filewrap-os',
     author='Drew Hainer',
     author_email='codeconfidant@gmail.com',
