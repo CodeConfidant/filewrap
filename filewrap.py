@@ -724,3 +724,51 @@ def zip_extract(filepath):
     with zipfile.ZipFile(filepath, mode="r", compression=zipfile.ZIP_DEFLATED) as archive:
         archive.extractall()
         archive.close()
+
+# Count and return the number of files within a directory.
+def filecount(filepath):
+    if (type(filepath) is not str):
+        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+
+    if (path_exists(filepath) == False):
+        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+
+    if (isdir(filepath) == False and filepath != ".."):
+        raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
+
+    working_directory = wdir()
+    count = int(0)
+    contents = list(lsdir(filepath))
+    chdir(filepath)
+
+    for item in contents:
+        if (isfile(item) == True):
+            count += 1
+    
+    chdir(working_directory)
+
+    return count
+
+# Count and return the number of directories within a directory.
+def dircount(filepath):
+    if (type(filepath) is not str):
+        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+
+    if (path_exists(filepath) == False):
+        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+
+    if (isdir(filepath) == False and filepath != ".."):
+        raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
+
+    working_directory = wdir()
+    count = int(0)
+    contents = list(lsdir(filepath))
+    chdir(filepath)
+
+    for item in contents:
+        if (isdir(item) == True):
+            count += 1
+    
+    chdir(working_directory)
+
+    return count

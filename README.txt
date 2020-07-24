@@ -101,3 +101,7 @@ tar_extract(filepath) 	                Extract a tar gzip archive contents to wo
 zip_wrap(filepath) 	                    Create a zip archive with DEFLATE compression.
 
 zip_extract(filepath) 	                Extract a zip archive contents to working directory.
+
+filecount(filepath)                     Count and return the number of files within a directory.
+
+dircount(filepath)                      Count and return the number of directories within a directory.

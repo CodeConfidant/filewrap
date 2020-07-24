@@ -274,6 +274,22 @@
             Extract a zip archive contents to working directory.
         </td>
 	</tr>
+    <tr>
+		<td>
+            <code>filecount(filepath)</code>
+        </td>
+		<td>
+            Count and return the number of files within a directory.
+        </td>
+	</tr>
+    <tr>
+		<td>
+            <code>dircount(filepath)</code>
+        </td>
+		<td>
+            Count and return the number of directories within a directory.
+        </td>
+	</tr>
 </table>
 
 [Back to Top](#filewrap)
