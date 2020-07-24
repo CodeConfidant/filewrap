@@ -5,7 +5,7 @@ A Python package for file/archive manipulation & management.
 Make sure to have the latest version of Python 3 installed although this should work with previous versions. 
 
 To install the package with pip enter command in terminal:
-    pip install git+https://github.com/CodeConfidant/filewrap-os.git#egg=filewrap-os
+    pip install filewrap
 
 To uninstall the package with pip enter command in terminal:
     pip uninstall filewrap
