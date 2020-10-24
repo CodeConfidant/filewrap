@@ -38,6 +38,25 @@
             The destination_path and *filepaths arguments must be strings.
         </td>
 	</tr>
+    <tr>
+		<td>
+            <code>read(filepath)</code>
+        </td>
+		<td>
+            Read the binary from a file and return. <br/>
+            The filepath argument must be a string.
+        </td>
+	</tr>
+    <tr>
+		<td>
+            <code>write(filepath, data)</code>
+        </td>
+		<td>
+            Write bytes object to a file. <br/>
+            The filepath argument must be a string. <br/>
+            The data argument must be a bytes object.
+        </td>
+	</tr>
 	<tr>
 		<td>
             <code>rpfile(mode, *filepaths)</code>

@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='filewrap',
-    version='1.1',
+    version='1.1.1',
     py_modules=['filewrap'],
     license='MIT',
     description='A Python package for file/archive manipulation & management.',

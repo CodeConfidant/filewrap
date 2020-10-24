@@ -67,6 +67,3 @@ filewrap.rmdir("demo-renamed")
 
 # Delete the demo.txt file. 
 filewrap.rmfile(filepath)
-
-# Delete objects.
-del(dirpath, filepath, alpha_lines, beta_lines, gamma_lines)

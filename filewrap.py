@@ -69,10 +69,40 @@ def copyfile(destination_path, *filepaths):
             raise ValueError("The given file path " + str(filepath) + " isn't a file!")
 
         print("Copying:", filepath, "to", destination_path)    
-        lines = mklist("b", filepath)
+        data = read(filepath)
         mkfile("b", os.path.join(destination_path, filepath))
-        writelines("b", os.path.join(destination_path, filepath), lines)
+        write(os.path.join(destination_path, filepath), data)
         print("Copy Success:", filepath, "copied to", destination_path)
+
+# Read the binary from a file and return.
+# The filepath argument must be a string.
+def read(filepath):
+    if (path_exists(filepath) == False):
+        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+
+    if (isfile(filepath) == False):
+        raise ValueError("The given file path " + str(filepath) + " isn't a file!")
+
+    with open(filepath, "rb") as new_file:
+        data = new_file.read(); new_file.close()
+        return data
+
+# Write bytes object to a file.
+# The filepath argument must be a string.
+# The data argument must be a bytes object.
+def write(filepath, data):
+    if (path_exists(filepath) == False):
+        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+
+    if (isfile(filepath) == False):
+        raise ValueError("The given file path " + str(filepath) + " isn't a file!")
+
+    if (type(data) is not bytes):
+        raise TypeError("The data argument isn't of type bytes!")
+
+    with open(filepath, "wb") as new_file:
+        new_file.write(data); new_file.close()
+       
 
 # Read and print lines in single/multiple text/binary based files.
 # The mode argument must be either strings: "t" (text) or "b" (binary).

@@ -17,6 +17,13 @@ copydir(destination_path, target_path): 	Copy target directory and all of it's s
 copyfile(destination_path, *filepaths): 	Copy single/multiple files to destination directory.
                                             The destination_path and *filepaths arguments must be strings.
 
+read(filepath):                         Read the binary from a file and return.
+                                        The filepath argument must be a string.                
+
+write(filepath, data):                  Write bytes object to a file.
+                                        The filepath argument must be a string.
+                                        The data argument must be a bytes object.
+
 rpfile(mode, *filepaths): 	            Read and print lines in single/multiple text/binary based files.
                                         The mode argument must be either strings: "t" (text) or "b" (binary).
                                         The *filepaths arguments must be strings.
