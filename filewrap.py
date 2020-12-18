@@ -323,18 +323,11 @@ def wdir():
 def pwdir():
     print("-", wdir())
 
-# Return a list from lines in single/multiple text/binary based files.
-# The mode argument must be either strings: "t" (text) or "b" (binary).
+# Return a list from lines in single/multiple text based files.
 # The *filepaths arguments must be strings.
-def mklist(mode, *filepaths):
+def mklist(*filepaths):
     finalList = list([])
     tempList = list([])
-
-    if (type(mode) is not str):
-        raise TypeError("The given mode " + str(mode) + " isn't a string!")
-
-    if (mode != "t" and mode != "b"):
-        raise ValueError("The mode is of the incorrect value! It must either strings: 't' (text) or 'b' (binary)")
         
     for filepath in filepaths:
         if (type(filepath) is not str):
@@ -346,195 +339,127 @@ def mklist(mode, *filepaths):
         if (isfile(filepath) == False):
             raise ValueError("The given file path " + str(filepath) + " isn't a file!")    
 
-        with open(filepath, "r" + mode) as new_file:
+        with open(filepath, "rt") as new_file:
             tempList = new_file.readlines()
             new_file.close()
 
             for element in tempList:
-                if (mode == "t"):
-                    element = element.strip("\n")
-                    finalList.append(element)
-                elif (mode == "b"):
-                    finalList.append(element)
-
+                element = element.strip("\n")
+                finalList.append(element)
+               
     return finalList
  
-# Write singular strings or lists of elements in sequence to lines in a text/binary based file.
-# The mode argument must be either strings: "t" (text) or "b" (binary).
+# Write singular strings or lists of strings in sequence to lines in a text based file.
 # The filepath argument must be a string. 
 # The lines in the file are overwritten by the lines argument values.       
-def writelines(mode, filepath, *lines):
+def writelines(filepath, *lines):
     j = int(0)
     i = int(0)
 
     if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
 
-    if (type(mode) is not str):
-        raise TypeError("The given mode " + str(mode) + " isn't a string!")
-
     if (path_exists(filepath) == False):
         raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
 
     if (isfile(filepath) == False):
         raise ValueError("The given file path " + str(filepath) + " isn't a file!")
 
-    if (mode != "t" and mode != "b"):
-        raise ValueError("The mode is of the incorrect value! It must either strings: 't' (text) or 'b' (binary)")
 
     print("Writing:", filepath)
 
-    with open(filepath, "w" + mode) as new_file:
+    with open(filepath, "wt") as new_file:
         for line in lines:      
-            if (type(line) is not list and type(line) is not str):
-                raise TypeError("The argument " + str(line) + " isn't a list or string!")
-                
-            if (mode == "t"):
-                if (type(line) is str):
-                    if (line == ""):
-                        pass
-                    elif (j == 0 and line != ""):
-                        new_file.write(line)
-                    else:
-                        new_file.write("\n")
-                        new_file.write(line)
-                        
-                    j += 1
-                    
-                if (type(line) is list):
-                    if (len(line) == 0):
-                        pass
-                    elif (j == 0 and len(line) != 0):
-                        while (i < len(line) - 1):
-                            new_file.write(str(line[i]))
-                            new_file.write("\n")
-                            i += 1
+            if (type(line) is not str and type(line) is not list):
+                raise ValueError("The line argument must be a string or a list of strings!")
 
-                        new_file.write(str(line[i]))
-                        i = int(0)
-                    else:
-                        new_file.write("\n")
-
-                        while (i < len(line) - 1):
-                            new_file.write(str(line[i]))
-                            new_file.write("\n")
-                            i += 1
-
-                        new_file.write(str(line[i]))
-                        i = int(0)
-
-                    j += 1
-                
-            elif (mode == "b"):
-                if (type(line) is str):
+            if (type(line) is str):
+                if (line == ""):
                     pass
+                elif (j == 0 and line != ""):
+                    new_file.write(line)
+                else:
+                    new_file.write("\n")
+                    new_file.write(line)
+                        
+                j += 1
                     
-                if (type(line) is list):
-                    if (len(line) == 0):
-                        pass
-                    else :
-                        while (i < len(line)):
-                            new_file.write(line[i])
-                            i += 1
+            if (type(line) is list):
+                if (len(line) == 0):
+                    pass
+                elif (j == 0 and len(line) != 0):
 
-                        i = int(0)
+                    while (i < len(line) - 1):
+                        if (type(line[i]) is not str):
+                            raise TypeError("A value in the list argument isn't a string!")
 
+                        new_file.write(line[i])
+                        new_file.write("\n")
+                        i += 1
+
+                    new_file.write(line[i])
+                    i = int(0)
+                else:
+                    new_file.write("\n")
+
+                    while (i < len(line) - 1):
+                        if (type(line[i]) is not str):
+                            raise TypeError("A value in the list argument isn't a string!")
+
+                        new_file.write(line[i])
+                        new_file.write("\n")
+                        i += 1
+
+                    new_file.write(line[i])
+                    i = int(0)
+
+                j += 1
+                
         new_file.close()
 
     print("Write Success:", filepath, "written to!")
 
-# Append singular strings or lists of elements in sequence to lines at the end of a text/binary based file. 
-# The mode argument must be either strings: "t" (text) or "b" (binary).
+# Append singular strings or lists of strings in sequence to lines at the end of a text based file. 
 # The filepath argument must be a string.
-def appendlines(mode, filepath, *lines):
+def appendlines(filepath, *lines):
     i = int(0)
 
     if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
-
-    if (type(mode) is not str):
-        raise TypeError("The given mode " + str(mode) + " isn't a string!")
-         
+     
     if (path_exists(filepath) == False):
         raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
 
     if (isfile(filepath) == False):
         raise ValueError("The given file path " + str(filepath) + " isn't a file!")
-
-    if (mode != "t" and mode != "b"):
-        raise ValueError("The mode is of the incorrect value! It must either strings: 't' (text) or 'b' (binary)")
 
     print("Appending:", filepath)
 
-    with open(filepath, "a" + mode) as new_file:
+    with open(filepath, "at") as new_file:
         for line in lines:      
-            if (type(line) is not list and type(line) is not str):
-                raise TypeError("The argument " + str(line) + " isn't a list or string!")
+            if (type(line) is not str and type(line) is not list):
+                raise ValueError("The line argument must be a string or a list of strings!")
 
-            if (mode == "t"):
-                if (type(line) is str):        
-                    new_file.write("\n")
-                    new_file.write(line)
+            if (type(line) is str):        
+                new_file.write("\n")
+                new_file.write(line)
                         
-                if (type(line) is list):
-                    if (len(line) == 0):
-                        pass
-                    else: 
-                        new_file.write("\n")
-
-                        while (i < len(line) - 1):
-                            new_file.write (str(line[i]))
-                            new_file.write("\n")
-                            i += 1
-
-                        new_file.write(str(line[i]))
-                        i = int(0)             
-            elif (mode == "b"):
-                if (type(line) is str):   
+            if (type(line) is list):
+                if (len(line) == 0):
                     pass
-                 
-                if (type(line) is list):
-                    while (i < len(line)):
-                        new_file.write(line[i])
+                else: 
+                    new_file.write("\n")
+                    while (i < len(line) - 1):
+                        new_file.write (str(line[i]))
+                        new_file.write("\n")
                         i += 1
 
-                    i = int(0)
-                                 
+                    new_file.write(line[i])
+                    i = int(0)             
+                                         
         new_file.close()
             
     print("Append Success:", filepath, "appended to!")
-
-# Return information about a file as dictionary. 
-# The mode argument value can be one of the following strings: "rt", "at", "wt", "rb", "ab", "wb"
-# The filepath argument must be a string. 
-def attrfile(mode, filepath):
-    if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
-
-    if (type(mode) is not str):
-        raise TypeError("The given mode " + str(mode) + " isn't a string!")
-
-    if (path_exists(filepath) == False):
-        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
-
-    if (isfile(filepath) == False):
-        raise ValueError("The given file path " + str(filepath) + " isn't a file!")
-
-    if (mode != "rt" and mode != "at" and mode != "wt" and mode != "rb" and mode != "ab" and mode != "wb"):
-        raise ValueError("The mode argument must one of the following strings - 'rt', 'at', 'wt', 'rb', 'ab', 'wb' ")
-
-    with open(filepath, mode) as new_file:
-        fileAttributes = dict({ 
-            "fileName": filepath,
-            "fileNumber": new_file.fileno(),
-            "fileMode": mode,
-            "fileStreamInteractive": new_file.isatty(),
-            "fileSeekAbility": new_file.seekable(),
-            "fileReadAbility": new_file.readable(),
-            "fileWriteAbility": new_file.writable()
-        })
-        new_file.close()
-        return fileAttributes
 
 # Return boolean value (True or False) to check if a single file path exists.
 # The filepath argument must be a string.

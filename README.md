@@ -161,42 +161,29 @@
 	</tr>
     <tr>
 		<td>
-            <code>mklist(mode, *filepaths)</code>
+            <code>mklist(*filepaths)</code>
         </td>
 		<td>
-            Return a list from lines in single/multiple text/binary based files. <br/>
-            The mode argument must be either strings: "t" (text) or "b" (binary). <br/>
+            Return a list from lines in single/multiple text based files. <br/>
             The *filepaths arguments must be strings.
         </td>
 	</tr>
     <tr>
 		<td>
-            <code>writelines(mode, filepath, *lines)</code>
+            <code>writelines(filepath, *lines)</code>
         </td>
 		<td>
-            Write singular strings or lists of elements in sequence to lines in a text/binary based file. <br/>
-            The mode argument must be either strings: "t" (text) or "b" (binary). <br/>
+            Write singular strings or lists of strings in sequence to lines in a text based file. <br/>
             The filepath argument must be a string. <br/>
             The lines in the file are overwritten by the lines argument values.
         </td>
 	</tr>
     <tr>
 		<td>
-            <code>appendlines(mode, filepath, *lines)</code>
+            <code>appendlines(filepath, *lines)</code>
         </td>
 		<td>
-            Append singular strings or lists of elements in sequence to lines at the end of a text/binary based file. <br/> 
-            The mode argument must be either strings: "t" (text) or "b" (binary). <br/>
-            The filepath argument must be a string.
-        </td>
-	</tr>
-    <tr>
-		<td>
-            <code>attrfile(mode, filepath)</code>
-        </td>
-		<td>
-            Return information about a file as dictionary. <br/>
-            The mode argument value can be one of the following strings: "rt", "at", "wt", "rb", "ab", "wb" <br/>
+            Append singular strings or lists of strings in sequence to lines at the end of a text based file. <br/> 
             The filepath argument must be a string.
         </td>
 	</tr>

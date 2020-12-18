@@ -60,21 +60,14 @@ wdir(): 	                            Return string of the path of the current wo
 
 pwdir(): 	                            Print working directory to terminal.
 
-mklist(mode, *filepaths): 	            Return a list from lines in single/multiple text/binary based files.
-                                        The mode argument must be either strings: "t" (text) or "b" (binary).
+mklist(*filepaths): 	                Return a list from lines in single/multiple text based files.
                                         The *filepaths arguments must be strings.
 
-writelines(mode, filepath, *lines): 	Write singular strings or lists of elements in sequence to lines in a text/binary based file.
-                                        The mode argument must be either strings: "t" (text) or "b" (binary).
+writelines(filepath, *lines): 	        Write singular strings or lists of strings in sequence to lines in a text based file.
                                         The filepath argument must be a string.
                                         The lines in the file are overwritten by the lines argument values.
 
-appendlines(mode, filepath, *lines): 	Append singular strings or lists of elements in sequence to lines at the end of a text/binary based file.
-                                        The mode argument must be either strings: "t" (text) or "b" (binary).
-                                        The filepath argument must be a string.
-
-attrfile(mode, filepath): 	            Return information about a file as dictionary.
-                                        The mode argument value can be one of the following strings: "rt", "at", "wt", "rb", "ab", "wb"
+appendlines(filepath, *lines): 	        Append singular strings or lists of strings in sequence to lines at the end of a text based file.
                                         The filepath argument must be a string.
 
 path_exists(filepath): 	                Return boolean value (True or False) to check if a single file path exists.
