@@ -28,29 +28,13 @@ gamma_lines = list([
 ])
 
 filewrap.mkdir("demo")
-input("Press enter to continue:")
-
 filewrap.ren("demo", dirpath)
-input("Press enter to continue:")
-
 filewrap.mkfile("t", filepath)
-input("Press enter to continue:")
-
 filewrap.writelines(filepath, alpha_lines, beta_lines, "This is line 7 of the demo.txt file.", "This is line 8 of the demo.txt file.")
-input("Press enter to continue:")
-
 filewrap.appendlines(filepath, gamma_lines, "This is line 12 of the demo.txt file.", "This is line 13 of the demo.txt file.")
-input("Press enter to continue:")
-
 filewrap.tar_wrap(dirpath)
 filewrap.zip_wrap(dirpath)
-
 filewrap.rpdir()
-
 filewrap.rpfile("t", filepath)
-input("Press enter to continue:")
-
-filewrap.rmfile(filepath)
-filewrap.rmdir(dirpath)
-filewrap.rmfile(dirpath + ".tar.gz")
-filewrap.rmfile(dirpath + ".zip")
+filewrap.rmfile(dirpath + ".tar.gz", dirpath + ".zip")
+filewrap.rmall(dirpath)

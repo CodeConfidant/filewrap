@@ -67,12 +67,10 @@ def copyfile(destination_path, *filepaths):
 
         if (isfile(filepath) == False):
             raise ValueError("The given file path " + str(filepath) + " isn't a file!")
-
-        print("Copying:", filepath, "to", destination_path)    
+  
         data = read(filepath)
         mkfile("b", os.path.join(destination_path, filepath))
         write(os.path.join(destination_path, filepath), data)
-        print("Copy Success:", filepath, "copied to", destination_path)
 
 # Read the binary from a file and return.
 # The filepath argument must be a string.
@@ -146,9 +144,7 @@ def rmfile(*filepaths):
         if (isfile(filepath) == False):
             raise ValueError("The given file path " + str(filepath) + " isn't a file!")
 
-        print("Deleting:", filepath)
         os.remove(filepath)
-        print("Deletion Success:", filepath, "Deleted!")
 
 # Make single/multiple text/binary based files.
 # The mode argument must be either strings: "t" (text) or "b" (binary).
@@ -167,9 +163,7 @@ def mkfile(mode, *filepaths):
         if (mode != "t" and mode != "b"):
             raise ValueError("The mode is of the incorrect value! It must either strings: 't' (text) or 'b' (binary)")
         
-        print("Creating:", filepath)
         new_file = open(filepath, "x" + mode); new_file.close()
-        print("Creation Success:", filepath, "Created!")
 
 # Delete single/multiple empty directories.
 # The *filepaths arguments must be strings.
@@ -184,9 +178,7 @@ def rmdir(*filepaths):
         if (isdir(filepath) == False):
             raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
             
-        print("Deleting:", filepath)
         os.rmdir(filepath)
-        print("Deletion Success:", filepath, "Deleted!")
 
 # Delete single directory along with it's subdirectories and files.
 # Use this with caution, as you could delete your entire file system if you're not careful. 
@@ -230,9 +222,7 @@ def mkdir(*filepaths):
         if (path_exists(filepath) == True):
             raise FileExistsError("The given file path " + str(filepath) + " already exists!")
             
-        print("Creating:", filepath)
         os.mkdir(filepath)
-        print("Creation Success:", filepath, "Created!")
 
 # Output to terminal the file/subdirectory names of single/multiple argument filepaths.
 # Use no arguments for working directory only.
@@ -365,9 +355,6 @@ def writelines(filepath, *lines):
     if (isfile(filepath) == False):
         raise ValueError("The given file path " + str(filepath) + " isn't a file!")
 
-
-    print("Writing:", filepath)
-
     with open(filepath, "wt") as new_file:
         for line in lines:      
             if (type(line) is not str and type(line) is not list):
@@ -417,8 +404,6 @@ def writelines(filepath, *lines):
                 
         new_file.close()
 
-    print("Write Success:", filepath, "written to!")
-
 # Append singular strings or lists of strings in sequence to lines at the end of a text based file. 
 # The filepath argument must be a string.
 def appendlines(filepath, *lines):
@@ -432,8 +417,6 @@ def appendlines(filepath, *lines):
 
     if (isfile(filepath) == False):
         raise ValueError("The given file path " + str(filepath) + " isn't a file!")
-
-    print("Appending:", filepath)
 
     with open(filepath, "at") as new_file:
         for line in lines:      
@@ -458,8 +441,6 @@ def appendlines(filepath, *lines):
                     i = int(0)             
                                          
         new_file.close()
-            
-    print("Append Success:", filepath, "appended to!")
 
 # Return boolean value (True or False) to check if a single file path exists.
 # The filepath argument must be a string.
@@ -548,9 +529,7 @@ def ren(current_filepath, desired_filepath):
         if (path_exists(desired_filepath) == True):
             raise FileExistsError("The given file path " + str(desired_filepath) + " already exists!")
 
-        print("Renaming:", current_filepath, "as", desired_filepath)
         os.rename(current_filepath, desired_filepath)
-        print("Rename Success:", current_filepath, "renamed as", desired_filepath)
 
     if (type(current_filepath) is list and type(desired_filepath) is list):
         if (len(current_filepath) != len(desired_filepath)):
@@ -569,9 +548,7 @@ def ren(current_filepath, desired_filepath):
             if (path_exists(desired_filepath[i]) == True):
                 raise FileExistsError("The given file path " + str(desired_filepath[i]) + " already exists!")
 
-            print("Renaming:", current_filepath[i], "as", desired_filepath[i])
             os.rename(current_filepath[i], desired_filepath[i])
-            print("Rename Success:", current_filepath[i], "renamed as", desired_filepath[i])
             i += 1
 
 # Create a tar archive with gzip compression & .gz extension.
