@@ -295,6 +295,14 @@
             Count and return the number of directories within a directory.
         </td>
 	</tr>
+    <tr>
+		<td>
+            <code>size(*filepaths)</code>
+        </td>
+		<td>
+            Get the total combined size in bytes of the file paths & directories within the *filepaths argument.
+        </td>
+	</tr>
 </table>
 
 [Back to Top](#filewrap)

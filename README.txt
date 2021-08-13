@@ -103,3 +103,5 @@ zip_extract(filepath): 	                Extract a zip archive contents to workin
 filecount(filepath):                    Count and return the number of files within a directory.
 
 dircount(filepath):                     Count and return the number of directories within a directory.
+
+size(*filepaths):                       Get the total combined size in bytes of the file paths & directories within the *filepaths argument.

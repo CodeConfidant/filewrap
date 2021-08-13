@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='filewrap',
-    version='1.1.3',
+    version='1.1.4',
     py_modules=['filewrap'],
     license='MIT',
     description='A Python package for file/archive manipulation & management.',
@@ -16,4 +16,9 @@ setup(
     platforms=['Windows', 'Linux']
 )
 
-# Setup python package - python setup.py sdist
+# - Update README.md and README.txt
+# - Update Version Number
+# - Tar Wrap the Package: python setup.py sdist
+# - Upload to PYPI: twine upload dist/*
+# - Commit Changes
+# - Change Release Version in Github Repo

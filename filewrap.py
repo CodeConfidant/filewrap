@@ -704,3 +704,27 @@ def dircount(filepath):
     chdir(working_directory)
 
     return count
+
+# Get the total combined size in bytes of the file paths & directories within the *filepaths argument.
+def size(*filepaths):
+    size = int(0)
+
+    for filepath in filepaths:
+        if (path_exists(filepath) == False):
+            raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+
+        if (isfile(filepath) == True):
+            with open(filepath, "rb") as new_file:
+                new_file.seek(0, os.SEEK_END)
+                size += new_file.tell()
+                new_file.close()
+
+        if (isdir(filepath) == True):
+            for root, dirs, files in os.walk(filepath, topdown=True):
+                for path in files:
+                    with open(str(os.path.join(root, path)), "rb") as new_file:
+                        new_file.seek(0, os.SEEK_END)
+                        size += new_file.tell()
+                        new_file.close()
+
+    return size
