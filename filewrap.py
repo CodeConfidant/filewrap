@@ -714,17 +714,11 @@ def size(*filepaths):
             raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
 
         if (isfile(filepath) == True):
-            with open(filepath, "rb") as new_file:
-                new_file.seek(0, os.SEEK_END)
-                size += new_file.tell()
-                new_file.close()
-
+            size += os.path.getsize(filepath)
+            
         if (isdir(filepath) == True):
             for root, dirs, files in os.walk(filepath, topdown=True):
                 for path in files:
-                    with open(str(os.path.join(root, path)), "rb") as new_file:
-                        new_file.seek(0, os.SEEK_END)
-                        size += new_file.tell()
-                        new_file.close()
+                    size += os.path.getsize(str(os.path.join(root, path)))
 
     return size

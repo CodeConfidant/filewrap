@@ -1,6 +1,6 @@
 # ***filewrap***
 
-    A Python package for file/archive manipulation & management.
+    Python package for file/directory/archive management.
 
     Make sure to have the latest version of Python 3 installed although this should work with previous versions. 
 
