@@ -257,14 +257,14 @@ def lsdir(filepath = None):
     if (filepath is None or filepath == ''):
         return list(os.listdir())
     else:
-        if (type(filepath[0]) is not str):
-            raise TypeError(f"Given file path ${filepath[0]} isn't a string.")
+        if (type(filepath) is not str):
+            raise TypeError(f"Given file path ${filepath} isn't a string.")
 
-        if (path_exists(filepath[0]) == False):
-            raise FileNotFoundError(f"Given file path ${filepath[0]} doesn't exist.")
+        if (path_exists(filepath) == False):
+            raise FileNotFoundError(f"Given file path ${filepath} doesn't exist.")
 
-        if (isdir(filepath[0]) == False):
-            raise ValueError(f"Given file path ${filepath[0]} isn't a directory.")
+        if (isdir(filepath) == False):
+            raise ValueError(f"Given file path ${filepath} isn't a directory.")
 
         return list(os.listdir(filepath))
 
@@ -505,10 +505,10 @@ def ren(current_filepath, desired_filepath):
                 raise TypeError(f"Both current_filepath and desired_filepath lists may contain only strings.")
 
             if (path_exists(current_filepath[i]) == False):
-                raise FileNotFoundError(f"Given file path ${current_filepath} doesn't exist.")
+                raise FileNotFoundError(f"Given file path ${current_filepath[i]} doesn't exist.")
 
             if (path_exists(desired_filepath[i]) == True):
-                raise FileExistsError(f"Given file path ${desired_filepath} already exists.")
+                raise FileExistsError(f"Given file path ${desired_filepath[i]} already exists.")
 
             os.rename(current_filepath[i], desired_filepath[i])
             i += 1
