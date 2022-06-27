@@ -47,7 +47,6 @@ def copydir(destination_path, target_path):
 # Copy single/multiple files to destination directory.
 # The destination_path and *filepaths arguments must be strings.
 def copyfile(destination_path, *filepaths):
-    working_directory = wdir()
 
     if (type(destination_path) is not str):
         raise TypeError("The given file path " + str(destination_path) + " isn't a string!")
@@ -251,45 +250,23 @@ def rpdir(*filepaths):
             for file in directory:
                 print("-", file)
 
-# Return a list with file/subdirectory names of the single/multiple argument filepaths.
-# If there are no arguments used in *filepaths, a list of the contents within the working directory is returned.
-# If there is only one argument used in *filepaths, a list of the contents of only that directory is returned. 
-# Using the method with two or more arguments in *filepaths will return a list of lists with each list containing the file/subdirectory names of that filepath argument.
-def lsdir(*filepaths):
-    if (len(filepaths) == 0):
+# Return a list with file/subdirectory names of the single argument directory, one level down.
+# If there is no argument used in filepath, a list of the contents (e.g. paths of files & directories) within the working directory is returned.
+# If there is only one argument used in filepath, a list of the contents of only that directory is returned. 
+def lsdir(filepath = None):
+    if (filepath is None or filepath == ''):
         return list(os.listdir())
-    elif (len(filepaths) == 1):
-        if (type(filepaths[0]) is not str):
-            raise TypeError("The given file path " + str(filepaths[0]) + " isn't a string!")
-
-        if (path_exists(filepaths[0]) == False):
-            raise FileNotFoundError("The given file path " + str(filepaths[0]) + " doesn't exist!")
-
-        if (isdir(filepaths[0]) == False):
-            raise ValueError("The given file path " + str(filepaths[0]) + " isn't a directory!")
-
-        return list(os.listdir(filepaths[0]))
     else:
-        finalList = list()
+        if (type(filepath[0]) is not str):
+            raise TypeError(f"Given file path ${filepath[0]} isn't a string.")
 
-        for filepath in filepaths:
-            fileList = list()
+        if (path_exists(filepath[0]) == False):
+            raise FileNotFoundError(f"Given file path ${filepath[0]} doesn't exist.")
 
-            if (type(filepath) is not str):
-                raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        if (isdir(filepath[0]) == False):
+            raise ValueError(f"Given file path ${filepath[0]} isn't a directory.")
 
-            if (path_exists(filepath) == False):
-                raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
-
-            if (isdir(filepath) == False):
-                raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
-
-            for file in os.listdir(filepath):
-                fileList.append(file)
-
-            finalList.append(fileList)
-
-        return finalList
+        return list(os.listdir(filepath))
 
 # Change current working directory.
 # The filepath argument must be a string. 
@@ -510,46 +487,39 @@ def iszip(filepath):
 def ren(current_filepath, desired_filepath):
     i = int(0)
 
-    if (type(current_filepath) is str and type(desired_filepath) is not str):
-        raise TypeError("The current_filepath argument is a string, the desired_filepath argument must be a string!")
+    if (type(current_filepath) is not type(desired_filepath)):
+        raise TypeError("The current_filepath and desired_filepath arguments must be the same type.")
 
-    if (type(current_filepath) is not str and type(desired_filepath) is str):
-        raise TypeError("The desired_filepath argument is a string, the current_filepath argument must be a string!")
-
-    if (type(current_filepath) is list and type(desired_filepath) is not list):
-        raise TypeError("The current_filepath argument is a list, the desired_filepath argument must be a list!")
-
-    if (type(current_filepath) is not list and type(desired_filepath) is list):
-        raise TypeError("The desired_filepath argument is a list, the current_filepath argument must be a list!")
-        
-    if (type(current_filepath) is str and type(desired_filepath) is str):
-        if (path_exists(current_filepath) == False):
-            raise FileNotFoundError("The given file path " + str(current_filepath) + " doesn't exist!")
-
-        if (path_exists(desired_filepath) == True):
-            raise FileExistsError("The given file path " + str(desired_filepath) + " already exists!")
-
-        os.rename(current_filepath, desired_filepath)
+    if (type(current_filepath) is not str and type(current_filepath) is not list):
+        raise TypeError("The current_filepath argument must be either a string or list.")
+   
+    if (type(desired_filepath) is not str and type(desired_filepath) is not list):
+        raise TypeError("The desired_filepath argument must be either a string or list.")
 
     if (type(current_filepath) is list and type(desired_filepath) is list):
         if (len(current_filepath) != len(desired_filepath)):
-            raise ValueError("The length of the list current_filepath is not equal to the length of the list desired_filepath!")
+            raise ValueError("Length of list current_filepath must be equal to length of list desired_filepath.")
 
         while(i < len(current_filepath) and i < len(desired_filepath)):
-            if (type(current_filepath[i]) is not str):
-                raise TypeError("The given file path " + str(current_filepath[i]) + " isn't a string!")
-
-            if (type(desired_filepath[i]) is not str):
-                raise TypeError("The given file path " + str(desired_filepath[i]) + " isn't a string!")
+            if (type(current_filepath[i]) is not str or type(desired_filepath[i]) is not str):
+                raise TypeError(f"Both current_filepath and desired_filepath lists may contain only strings.")
 
             if (path_exists(current_filepath[i]) == False):
-                raise FileNotFoundError("The given file path " + str(current_filepath[i]) + " doesn't exist!")
+                raise FileNotFoundError(f"Given file path ${current_filepath} doesn't exist.")
 
             if (path_exists(desired_filepath[i]) == True):
-                raise FileExistsError("The given file path " + str(desired_filepath[i]) + " already exists!")
+                raise FileExistsError(f"Given file path ${desired_filepath} already exists.")
 
             os.rename(current_filepath[i], desired_filepath[i])
             i += 1
+    else:
+        if (path_exists(current_filepath) == False):
+            raise FileNotFoundError(f"Given file path ${current_filepath} doesn't exist.")
+
+        if (path_exists(desired_filepath) == True):
+            raise FileExistsError(f"Given file path ${desired_filepath} already exists.")
+
+        os.rename(current_filepath, desired_filepath)
 
 # Create a tar archive with gzip compression & .gz extension.
 def tar_wrap(filepath):

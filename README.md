@@ -125,13 +125,12 @@
 	</tr>
     <tr>
 		<td>
-            <code>lsdir(*filepaths)</code>
+            <code>lsdir(filepath)</code>
         </td>
 		<td>
-            Return a list with file/subdirectory names of the single/multiple argument filepaths. <br/>
-            If there are no arguments used in *filepaths, a list of the contents within the working directory is returned. <br/>
-            If there is only one argument used in *filepaths, a list of the contents of only that filepath directory is returned. <br/>
-            Using the method with two or more arguments in *filepaths will return a list of lists with each list containing the file/subdirectory names of that filepath argument.
+            Return a list with file/subdirectory names of the single argument directory.
+            If there is no argument used in filepath, a list of the contents (e.g. paths of files & directories) within the working directory is returned.
+            If there is one argument used in filepath, a list of the contents of only that directory is returned.
         </td>
 	</tr>
     <tr>
