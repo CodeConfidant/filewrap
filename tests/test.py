@@ -2,7 +2,7 @@
 
 import sys, os
 
-sys.path.append(os.path.abspath("../filewrap-os"))
+sys.path.append(os.path.abspath("../filewrap"))
 
 import filewrap
 
