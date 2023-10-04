@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
-import os, tarfile, gzip, zipfile, zlib
+import os, tarfile, zipfile
 
-# Copy target directory and all of it's subdirectories/files to a destination directory.
+'''
+    Copy target directory and all of it's subdirectories/files to a destination directory.
+'''
 def copydir(destination_path, target_path):
     if (type(destination_path) is not str):
         raise TypeError("The given file path " + str(destination_path) + " isn't a string!")
@@ -44,8 +46,10 @@ def copydir(destination_path, target_path):
     for filepath in filepaths:
         copyfile(destination_path, filepath)
 
-# Copy single/multiple files to destination directory.
-# The destination_path and *filepaths arguments must be strings.
+'''
+    Copy single/multiple files to destination directory.
+        - The destination_path and *filepaths arguments must be strings.
+'''
 def copyfile(destination_path, *filepaths):
 
     if (type(destination_path) is not str):
@@ -71,8 +75,10 @@ def copyfile(destination_path, *filepaths):
         mkfile("b", os.path.join(destination_path, filepath))
         write(os.path.join(destination_path, filepath), data)
 
-# Read the binary from a file and return.
-# The filepath argument must be a string.
+'''
+    Read the binary from a file and return.
+        - The filepath argument must be a string.
+'''
 def read(filepath):
     if (path_exists(filepath) == False):
         raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
@@ -84,9 +90,11 @@ def read(filepath):
         data = new_file.read(); new_file.close()
         return data
 
-# Write bytes object to a file.
-# The filepath argument must be a string.
-# The data argument must be a bytes object.
+'''
+    Write bytes object to a file.
+        - The filepath argument must be a string.
+        - The data argument must be a bytes object.
+'''
 def write(filepath, data):
     if (path_exists(filepath) == False):
         raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
@@ -100,10 +108,11 @@ def write(filepath, data):
     with open(filepath, "wb") as new_file:
         new_file.write(data); new_file.close()
        
-
-# Read and print lines in single/multiple text/binary based files.
-# The mode argument must be either strings: "t" (text) or "b" (binary).
-# The *filepaths arguments must be strings. 
+'''
+    Read and print lines in single/multiple text/binary based files.
+        - The mode argument must be either strings: "t" (text) or "b" (binary).
+        - The *filepaths arguments must be strings. 
+'''
 def rpfile(mode, *filepaths):
     for filepath in filepaths:         
         if (type(filepath) is not str):
@@ -130,8 +139,10 @@ def rpfile(mode, *filepaths):
             new_file.close()
             print()
 
-# Delete single/multiple files.
-# The *filepaths arguments must be strings.
+'''
+    Delete single/multiple files.
+        The *filepaths arguments must be strings.
+'''
 def rmfile(*filepaths):
     for filepath in filepaths:
         if (type(filepath) is not str):
@@ -145,9 +156,11 @@ def rmfile(*filepaths):
 
         os.remove(filepath)
 
-# Make single/multiple text/binary based files.
-# The mode argument must be either strings: "t" (text) or "b" (binary).
-# The *filepaths arguments must be strings.
+'''
+    Make single/multiple text/binary based files.
+        - The mode argument must be either strings: "t" (text) or "b" (binary).
+        - The *filepaths arguments must be strings.
+'''
 def mkfile(mode, *filepaths):
     for filepath in filepaths:
         if (type(filepath) is not str):
@@ -164,8 +177,10 @@ def mkfile(mode, *filepaths):
         
         new_file = open(filepath, "x" + mode); new_file.close()
 
-# Delete single/multiple empty directories.
-# The *filepaths arguments must be strings.
+'''
+    Delete single/multiple empty directories.
+        - The *filepaths arguments must be strings.
+'''
 def rmdir(*filepaths):
     for filepath in filepaths:
         if (type(filepath) is not str):
@@ -179,8 +194,10 @@ def rmdir(*filepaths):
             
         os.rmdir(filepath)
 
-# Delete single directory along with it's subdirectories and files.
-# Use this with caution, as you could delete your entire file system if you're not careful. 
+'''
+    Delete single directory along with it's subdirectories and files.
+        - Use this with caution, as you could delete your entire file system if you're not careful.
+''' 
 def rmall(dirpath):
     if (type(dirpath) is not str):
         raise TypeError("The given file path " + str(dirpath) + " isn't a string!")
@@ -210,9 +227,11 @@ def rmall(dirpath):
             rmdir(file)
     finally:
         rmdir(dirpath)
- 
-# Make single/multiple directories.
-# The *filepaths arguments must be strings.
+
+''' 
+    Make single/multiple directories.
+        - The *filepaths arguments must be strings.
+'''
 def mkdir(*filepaths):
     for filepath in filepaths:
         if (type(filepath) is not str):
@@ -223,9 +242,11 @@ def mkdir(*filepaths):
             
         os.mkdir(filepath)
 
-# Output to terminal the file/subdirectory names of single/multiple argument filepaths.
-# Use no arguments for working directory only.
-# The *filepaths arguments must be strings. 
+'''
+    Output to terminal the file/subdirectory names of single/multiple argument filepaths.
+        - Use no arguments for working directory only.
+        - The *filepaths arguments must be strings.
+''' 
 def rpdir(*filepaths):
     if (len(filepaths) == 0):
         directory = list(lsdir())
@@ -250,9 +271,11 @@ def rpdir(*filepaths):
             for file in directory:
                 print("-", file)
 
-# Return a list with file/subdirectory names of the single argument directory, one level down.
-# If there is no argument used in filepath, a list of the contents (e.g. paths of files & directories) within the working directory is returned.
-# If there is only one argument used in filepath, a list of the contents of only that directory is returned. 
+'''
+    Return a list with file/subdirectory names of the single argument directory, one level down.
+        - If there is no argument used in filepath, a list of the contents (e.g. paths of files & directories) within the working directory is returned.
+        - If there is only one argument used in filepath, a list of the contents of only that directory is returned.
+''' 
 def lsdir(filepath = None):
     if (filepath is None or filepath == ''):
         return list(os.listdir())
@@ -268,8 +291,10 @@ def lsdir(filepath = None):
 
         return list(os.listdir(filepath))
 
-# Change current working directory.
-# The filepath argument must be a string. 
+'''
+    Change current working directory.
+        - The filepath argument must be a string.
+''' 
 def chdir(filepath):
     if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
@@ -282,16 +307,22 @@ def chdir(filepath):
 
     os.chdir(filepath)
 
-# Return string of the path of the current working directory. 
+'''
+    Return string of the path of the current working directory.
+''' 
 def wdir():
     return str(os.getcwd())
 
-# Print working directory to terminal. 
+'''
+    Print working directory to terminal.
+''' 
 def pwdir():
     print("-", wdir())
 
-# Return a list from lines in single/multiple text based files.
-# The *filepaths arguments must be strings.
+'''
+    Return a list from lines in single/multiple text based files.
+        - The *filepaths arguments must be strings.
+'''
 def mklist(*filepaths):
     finalList = list([])
     tempList = list([])
@@ -315,10 +346,12 @@ def mklist(*filepaths):
                 finalList.append(element)
                
     return finalList
- 
-# Write singular strings or lists of strings in sequence to lines in a text based file.
-# The filepath argument must be a string. 
-# The lines in the file are overwritten by the lines argument values.       
+
+''' 
+    Write singular strings or lists of strings in sequence to lines in a text based file.
+        - The filepath argument must be a string. 
+        - The lines in the file are overwritten by the lines argument values.
+'''       
 def writelines(filepath, *lines):
     j = int(0)
     i = int(0)
@@ -380,9 +413,10 @@ def writelines(filepath, *lines):
                 j += 1
                 
         new_file.close()
-
-# Append singular strings or lists of strings in sequence to lines at the end of a text based file. 
-# The filepath argument must be a string.
+'''
+    Append singular strings or lists of strings in sequence to lines at the end of a text based file. 
+        - The filepath argument must be a string.
+'''
 def appendlines(filepath, *lines):
     i = int(0)
 
@@ -419,8 +453,10 @@ def appendlines(filepath, *lines):
                                          
         new_file.close()
 
-# Return boolean value (True or False) to check if a single file path exists.
-# The filepath argument must be a string.
+'''
+    Return boolean value (True or False) to check if a single file path exists.
+        - The filepath argument must be a string.
+'''
 def path_exists(filepath):  
     if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
@@ -430,8 +466,10 @@ def path_exists(filepath):
     elif (os.path.exists(filepath) == False):
         return False
 
-# Return boolean value (True or False) to check if filepath argument is a file.
-# The filepath argument must be a string.
+'''
+    Return boolean value (True or False) to check if filepath argument is a file.
+        - The filepath argument must be a string.
+'''
 def isfile(filepath):
     if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
@@ -441,8 +479,10 @@ def isfile(filepath):
     elif (os.path.isfile(filepath) == False):
         return False
 
-# Return boolean value (True or False) to check if filepath argument is a directory.
-# The filepath argument must be a string.
+'''
+    Return boolean value (True or False) to check if filepath argument is a directory.
+        - The filepath argument must be a string.
+'''
 def isdir(filepath):
     if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
@@ -452,8 +492,10 @@ def isdir(filepath):
     elif (os.path.isdir(filepath) == False):
         return False
 
-# Return boolean value (True or False) to check if filepath argument is a tar archive.
-# The filepath argument must be a string.
+'''
+    Return boolean value (True or False) to check if filepath argument is a tar archive.
+        - The filepath argument must be a string.
+'''
 def istar(filepath):
     if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
@@ -462,9 +504,10 @@ def istar(filepath):
         return True
     elif (tarfile.is_tarfile(filepath) == False):
         return False
-
-# Return boolean value (True or False) to check if filepath argument is a zip archive.
-# The filepath argument must be a string.
+'''
+    Return boolean value (True or False) to check if filepath argument is a zip archive.
+        - The filepath argument must be a string.
+'''
 def iszip(filepath):
     if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
@@ -476,13 +519,12 @@ def iszip(filepath):
 
 '''
     Rename single/multiple files or directories.
+        - current_filepath represents the file path's name being changed.
+        - desired_filepath represents the file path's new intended name. 
     
-    current_filepath represents the file path's name being changed.
-    desired_filepath represents the file path's new intended name. 
-    
-    current_filepath and desired_filepath can either be:
-        Two strings
-        Two lists of equal length consisting of strings
+        - current_filepath and desired_filepath can either be:
+            1. Two strings
+            2. Two lists of equal length consisting of strings
 '''
 def ren(current_filepath, desired_filepath):
     i = int(0)
@@ -521,7 +563,9 @@ def ren(current_filepath, desired_filepath):
 
         os.rename(current_filepath, desired_filepath)
 
-# Create a tar archive with gzip compression & .gz extension.
+'''
+    Create a tar archive with gzip compression & .gz extension.
+'''
 def tar_wrap(filepath):
     arcpath = str(filepath + ".tar.gz")
     dirpaths = list([])
@@ -555,8 +599,9 @@ def tar_wrap(filepath):
             archive.add(file, recursive=False)
 
         archive.close()
-
-# Extract a tar gzip archive contents to working directory.
+'''
+    Extract a tar gzip archive contents to working directory.
+'''
 def tar_extract(filepath):
     if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
@@ -574,7 +619,9 @@ def tar_extract(filepath):
         archive.extractall()
         archive.close()
 
-# Create a zip archive with DEFLATE compression.
+'''
+    Create a zip archive with DEFLATE compression.
+'''
 def zip_wrap(filepath):
     arcpath = str(filepath + ".zip")
     dirpaths = list([])
@@ -609,7 +656,9 @@ def zip_wrap(filepath):
 
         archive.close()
 
-# Extract a zip archive contents to working directory.
+'''
+    Extract a zip archive contents to working directory.
+'''
 def zip_extract(filepath):
     if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
@@ -627,7 +676,9 @@ def zip_extract(filepath):
         archive.extractall()
         archive.close()
 
-# Count and return the number of files within a directory.
+'''
+    Count and return the number of files within a directory.
+'''
 def filecount(filepath):
     if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
@@ -651,7 +702,9 @@ def filecount(filepath):
 
     return count
 
-# Count and return the number of directories within a directory.
+'''
+    Count and return the number of directories within a directory.
+'''
 def dircount(filepath):
     if (type(filepath) is not str):
         raise TypeError("The given file path " + str(filepath) + " isn't a string!")
@@ -675,7 +728,9 @@ def dircount(filepath):
 
     return count
 
-# Get the total combined size in bytes of the file paths & directories within the *filepaths argument.
+'''
+    Get the total combined size in bytes of the file paths & directories within the *filepaths argument.
+'''
 def size(*filepaths):
     size = int(0)
 

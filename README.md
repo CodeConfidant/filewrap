@@ -10,7 +10,7 @@
     To uninstall the package with pip enter command in terminal:
         pip uninstall filewrap
 
-    Built-in modules used: os, tarfile, gzip, zipfile, zlib
+    Built-in modules used: os, tarfile, zipfile
 
 <table width="100%">
 	<tr>

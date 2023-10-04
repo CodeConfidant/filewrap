@@ -5,7 +5,7 @@ from pathlib import Path
 
 setup(
     name='filewrap',
-    version='1.1.5',
+    version='1.1.6',
     py_modules=['filewrap'],
     license='MIT',
     description='Python package for file/directory/archive management.',
@@ -21,6 +21,6 @@ setup(
 # - Update Version Number
 # - Tar Wrap the Package: python setup.py sdist
 # - Check Package: twine check dist/*
-# - Upload to PYPI: twine upload dist/*
+# - Upload to PYPI: twine upload dist/* -u <username> -p <password>
 # - Commit Changes
 # - Change Release Version in Github Repo
