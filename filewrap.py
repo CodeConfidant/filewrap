@@ -7,86 +7,98 @@ import os, tarfile, zipfile
 '''
 def copydir(destination_path, target_path):
     if (type(destination_path) is not str):
-        raise TypeError("The given file path " + str(destination_path) + " isn't a string!")
+        raise TypeError(f"Given path {destination_path} isn't a string.")
 
     if (type(target_path) is not str):
-        raise TypeError("The given file path " + str(target_path) + " isn't a string!")
+        raise TypeError(f"Given path {target_path} isn't a string.")
 
     if (path_exists(destination_path) == False):
-        raise FileNotFoundError("The given file path " + str(destination_path) + " doesn't exist!")
+        raise FileNotFoundError(f"Given path {destination_path} doesn't exist.")
 
     if (path_exists(target_path) == False):
-        raise FileNotFoundError("The given file path " + str(target_path) + " doesn't exist!")
+        raise FileNotFoundError(f"Given path {target_path} doesn't exist.")
 
     if (isdir(destination_path) == False):
-        raise ValueError("The given file path " + str(destination_path) + " isn't a directory!")
+        raise ValueError(f"Given path {destination_path} isn't a directory.")
 
     if (isdir(target_path) == False):
-        raise ValueError("The given file path " + str(target_path) + " isn't a directory!")
+        raise ValueError(f"Given path {target_path} isn't a directory.")
 
+    working_directory = wdir()
     dirpaths = list([target_path])
     filepaths = list([])
-    working_directory = wdir()
-    
+
     for root, dirs, files in os.walk(target_path, topdown=True):
         for path in dirs:
-            dirpaths.append(str(os.path.join(root, path)))
+            dirpaths.append(os.path.join(root, path))
         for path in files:
-            filepaths.append(str(os.path.join(root, path)))
+            filepaths.append(os.path.join(root, path))
 
     dirpaths.sort(); filepaths.sort()
     
     chdir(destination_path)
-
     for dirpath in dirpaths:
         mkdir(dirpath)
-
     chdir(working_directory)
 
     for filepath in filepaths:
-        copyfile(destination_path, filepath)
+        data = read(filepath)
+
+        chdir(destination_path)
+        mkfile('b', filepath)
+        write(data, filepath)
+        chdir(working_directory)
 
 '''
     Copy single/multiple files to destination directory.
         - The destination_path and *filepaths arguments must be strings.
 '''
 def copyfile(destination_path, *filepaths):
-
     if (type(destination_path) is not str):
-        raise TypeError("The given file path " + str(destination_path) + " isn't a string!")
+        raise TypeError(f"Given path {destination_path} isn't a string.")
 
     if (path_exists(destination_path) == False):
-        raise FileNotFoundError("The given file path " + str(destination_path) + " doesn't exist!")
+        raise FileNotFoundError(f"Given path {destination_path} doesn't exist.")
 
     if (isdir(destination_path) == False):
-        raise ValueError("The given file path " + str(destination_path) + " isn't a directory!")
+        raise ValueError(f"Given path {destination_path} isn't a directory.")
 
     for filepath in filepaths:
         if (type(filepath) is not str):
-            raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+            raise TypeError(f"Given path {filepath} isn't a string.")
 
         if (path_exists(filepath) == False):
-            raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+            raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
         if (isfile(filepath) == False):
-            raise ValueError("The given file path " + str(filepath) + " isn't a file!")
-  
+            raise ValueError(f"Given path {filepath} isn't a file.")
+        
+        filepath = filepath.replace('\\', '/')
         data = read(filepath)
-        mkfile("b", os.path.join(destination_path, filepath))
-        write(os.path.join(destination_path, filepath), data)
+
+        if ('/' in filepath):
+            segment = filepath.split('/')
+            filepath = segment[len(segment) - 1]
+
+        filepath = f'{destination_path}/{filepath}'
+        mkfile('b', filepath)
+        write(data, filepath)
 
 '''
     Read the binary from a file and return.
         - The filepath argument must be a string.
 '''
 def read(filepath):
+    if (type(filepath) is not str):
+        raise TypeError(f"Given path {filepath} isn't a string.")
+    
     if (path_exists(filepath) == False):
-        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+        raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
     if (isfile(filepath) == False):
-        raise ValueError("The given file path " + str(filepath) + " isn't a file!")
+        raise ValueError(f"Given path {filepath} isn't a file.")
 
-    with open(filepath, "rb") as new_file:
+    with open(filepath, 'rb') as new_file:
         data = new_file.read(); new_file.close()
         return data
 
@@ -95,49 +107,60 @@ def read(filepath):
         - The filepath argument must be a string.
         - The data argument must be a bytes object.
 '''
-def write(filepath, data):
+def write(data, filepath):
+    if (type(filepath) is not str):
+        raise TypeError(f"Given path {filepath} isn't a string.")
+    
     if (path_exists(filepath) == False):
-        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+        raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
     if (isfile(filepath) == False):
-        raise ValueError("The given file path " + str(filepath) + " isn't a file!")
+        raise ValueError(f"Given path {filepath} isn't a file.")
 
     if (type(data) is not bytes):
-        raise TypeError("The data argument isn't of type bytes!")
+        raise TypeError("The data argument isn't of type bytes.")
 
-    with open(filepath, "wb") as new_file:
+    with open(filepath, 'wb') as new_file:
         new_file.write(data); new_file.close()
        
 '''
     Read and print lines in single/multiple text/binary based files.
-        - The mode argument must be either strings: "t" (text) or "b" (binary).
+        - The mode argument must be either strings: 't' (text) or 'b' (binary).
         - The *filepaths arguments must be strings. 
 '''
 def rpfile(mode, *filepaths):
+    if (type(mode) is not str):
+        raise TypeError(f"Given mode {mode} isn't a string.")
+    
+    mode = mode.lower()
+    if (mode != 't' and mode != 'text' and mode != 'b' and mode != 'binary'):
+        raise ValueError("The mode argument is of the incorrect value. It must either be strings: 't' (text) or 'b' (binary)")
+    
+    if (mode == 'text'):
+        mode = 't'
+
+    if (mode == 'binary'):
+        mode = 'b'
+
     for filepath in filepaths:         
         if (type(filepath) is not str):
-            raise TypeError("The given file path " + str(filepath) + " isn't a string!")
-
-        if (type(mode) is not str):
-            raise TypeError("The given mode " + str(mode) + " isn't a string!")
+            raise TypeError(f"Given path {filepath} isn't a string.")
 
         if (path_exists(filepath) == False):
-            raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+            raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
         if (isfile(filepath) == False):
-            raise ValueError("The given file path " + str(filepath) + " isn't a file!")
+            raise ValueError(f"Given path {filepath} isn't a file.")
 
-        if (mode != "t" and mode != "b"):
-            raise ValueError("The mode is of the incorrect value! It must either strings: 't' (text) or 'b' (binary)")
+        print(f"Reading/Printing: {filepath}")
 
-        print(" ------------------------------", "\n", "Reading/Printing:", filepath, "\n", "------------------------------")
-
-        with open(filepath, "r" + mode) as new_file:
+        with open(filepath, 'r' + mode) as new_file:
             for line in new_file:
-                print(line, end="")
+                print(line, end='')
             
             new_file.close()
-            print()
+        
+        print()
 
 '''
     Delete single/multiple files.
@@ -146,36 +169,43 @@ def rpfile(mode, *filepaths):
 def rmfile(*filepaths):
     for filepath in filepaths:
         if (type(filepath) is not str):
-            raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+            raise TypeError(f"Given path {filepath} isn't a string.")
 
         if (path_exists(filepath) == False):
-            raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+            raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
         if (isfile(filepath) == False):
-            raise ValueError("The given file path " + str(filepath) + " isn't a file!")
+            raise ValueError(f"Given path {filepath} isn't a file.")
 
         os.remove(filepath)
 
 '''
     Make single/multiple text/binary based files.
-        - The mode argument must be either strings: "t" (text) or "b" (binary).
+        - The mode argument must be either strings: 't' (text) or 'b' (binary).
         - The *filepaths arguments must be strings.
 '''
 def mkfile(mode, *filepaths):
+    if (type(mode) is not str):
+        raise TypeError(f"Given mode {mode} isn't a string.")
+    
+    mode = mode.lower()
+    if (mode != 't' and mode != 'text' and mode != 'b' and mode != 'binary'):
+        raise ValueError("The mode argument is of the incorrect value. It must either be strings: 't' (text) or 'b' (binary)")
+    
+    if (mode == 'text'):
+        mode = 't'
+
+    if (mode == 'binary'):
+        mode = 'b'
+
     for filepath in filepaths:
         if (type(filepath) is not str):
-            raise TypeError("The given file path " + str(filepath) + " isn't a string!")
-            
-        if (type(mode) is not str):
-            raise TypeError("The given mode " + str(mode) + " isn't a string!")
+            raise TypeError(f"Given path {filepath} isn't a string.")
 
         if (path_exists(filepath) == True):
-            raise FileExistsError("The given file path " + str(filepath) + " already exists!")
-
-        if (mode != "t" and mode != "b"):
-            raise ValueError("The mode is of the incorrect value! It must either strings: 't' (text) or 'b' (binary)")
+            raise FileExistsError(f"Given path {filepath} already exists.")
         
-        new_file = open(filepath, "x" + mode); new_file.close()
+        new_file = open(filepath, 'x' + mode); new_file.close()
 
 '''
     Delete single/multiple empty directories.
@@ -184,13 +214,13 @@ def mkfile(mode, *filepaths):
 def rmdir(*filepaths):
     for filepath in filepaths:
         if (type(filepath) is not str):
-            raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+            raise TypeError(f"Given path {filepath} isn't a string.")
 
         if (path_exists(filepath) == False):
-            raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+            raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
         if (isdir(filepath) == False):
-            raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
+            raise ValueError(f"Given path {filepath} isn't a directory.")
             
         os.rmdir(filepath)
 
@@ -200,13 +230,13 @@ def rmdir(*filepaths):
 ''' 
 def rmall(dirpath):
     if (type(dirpath) is not str):
-        raise TypeError("The given file path " + str(dirpath) + " isn't a string!")
+        raise TypeError(f"Given path {dirpath} isn't a string.")
 
     if (path_exists(dirpath) == False):
-        raise FileNotFoundError("The given file path " + str(dirpath) + " doesn't exist!")
+        raise FileNotFoundError(f"Given path {dirpath} doesn't exist.")
 
     if (isdir(dirpath) == False):
-        raise ValueError("The given file path " + str(dirpath) + " isn't a directory!")
+        raise ValueError(f"Given path {dirpath} isn't a directory.")
 
     dirpaths = list([])
     filepaths = list([])
@@ -222,11 +252,10 @@ def rmall(dirpath):
     for file in filepaths:
         rmfile(file)
 
-    try:
-        for file in dirpaths:
-            rmdir(file)
-    finally:
-        rmdir(dirpath)
+    for file in dirpaths:
+        rmdir(file)
+   
+    rmdir(dirpath)
 
 ''' 
     Make single/multiple directories.
@@ -235,10 +264,10 @@ def rmall(dirpath):
 def mkdir(*filepaths):
     for filepath in filepaths:
         if (type(filepath) is not str):
-            raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+            raise TypeError(f"Given path {filepath} isn't a string.")
 
         if (path_exists(filepath) == True):
-            raise FileExistsError("The given file path " + str(filepath) + " already exists!")
+            raise FileExistsError(f"Given path {filepath} already exists.")
             
         os.mkdir(filepath)
 
@@ -250,26 +279,26 @@ def mkdir(*filepaths):
 def rpdir(*filepaths):
     if (len(filepaths) == 0):
         directory = list(lsdir())
-        print(" -------------------", "\n", "Directory - Working", "\n", "-------------------")
-
+        
+        print('Directory - Working')
         for file in directory:
-            print("-", file)        
+            print(file)        
     else: 
         for filepath in filepaths:
             if (type(filepath) is not str):
-                raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+                raise TypeError(f"Given path {filepath} isn't a string.")
 
             if (path_exists(filepath) == False):
-                raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+                raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
             if (isdir(filepath) == False):
-                raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
+                raise ValueError(f"Given path {filepath} isn't a directory.")
                 
-            directory = list(lsdir(filepath))
-            print(" -------------------", "\n", "Directory - ", filepath.strip("../"), "\n", "-------------------")
-
+            directory = lsdir(filepath)
+            
+            print(f"Directory - {filepath.strip('../')}")
             for file in directory:
-                print("-", file)
+                print(file)
 
 '''
     Return a list with file/subdirectory names of the single argument directory, one level down.
@@ -281,15 +310,15 @@ def lsdir(filepath = None):
         return list(os.listdir())
     else:
         if (type(filepath) is not str):
-            raise TypeError(f"Given file path ${filepath} isn't a string.")
+            raise TypeError(f"Given path {filepath} isn't a string.")
 
         if (path_exists(filepath) == False):
-            raise FileNotFoundError(f"Given file path ${filepath} doesn't exist.")
+            raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
         if (isdir(filepath) == False):
-            raise ValueError(f"Given file path ${filepath} isn't a directory.")
+            raise ValueError(f"Given path {filepath} isn't a directory.")
 
-        return list(os.listdir(filepath))
+        return os.listdir(filepath)
 
 '''
     Change current working directory.
@@ -297,13 +326,13 @@ def lsdir(filepath = None):
 ''' 
 def chdir(filepath):
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
 
-    if (path_exists(filepath) == False and filepath != ".."):
-        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+    if (path_exists(filepath) == False):
+        raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
-    if (isdir(filepath) == False and filepath != ".."):
-        raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
+    if (isdir(filepath) == False):
+        raise ValueError(f"Given path {filepath} isn't a directory.")
 
     os.chdir(filepath)
 
@@ -311,13 +340,13 @@ def chdir(filepath):
     Return string of the path of the current working directory.
 ''' 
 def wdir():
-    return str(os.getcwd())
+    return os.getcwd()
 
 '''
     Print working directory to terminal.
 ''' 
 def pwdir():
-    print("-", wdir())
+    print(wdir())
 
 '''
     Return a list from lines in single/multiple text based files.
@@ -329,20 +358,20 @@ def mklist(*filepaths):
         
     for filepath in filepaths:
         if (type(filepath) is not str):
-            raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+            raise TypeError(f"Given path {filepath} isn't a string.")
 
         if (path_exists(filepath) == False):
-            raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+            raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
         if (isfile(filepath) == False):
-            raise ValueError("The given file path " + str(filepath) + " isn't a file!")    
+            raise ValueError(f"Given path {filepath} isn't a file.")    
 
-        with open(filepath, "rt") as new_file:
+        with open(filepath, 'rt') as new_file:
             tempList = new_file.readlines()
             new_file.close()
 
             for element in tempList:
-                element = element.strip("\n")
+                element = element.strip('\n')
                 finalList.append(element)
                
     return finalList
@@ -353,64 +382,60 @@ def mklist(*filepaths):
         - The lines in the file are overwritten by the lines argument values.
 '''       
 def writelines(filepath, *lines):
-    j = int(0)
-    i = int(0)
+    j = 0
+    i = 0
 
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
 
     if (path_exists(filepath) == False):
-        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+       raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
     if (isfile(filepath) == False):
-        raise ValueError("The given file path " + str(filepath) + " isn't a file!")
+        raise ValueError(f"Given path {filepath} isn't a file.")
 
-    with open(filepath, "wt") as new_file:
+    with open(filepath, 'wt') as new_file:
         for line in lines:      
-            if (type(line) is not str and type(line) is not list):
-                raise ValueError("The line argument must be a string or a list of strings!")
-
             if (type(line) is str):
-                if (line == ""):
+                if (line == ''):
                     pass
-                elif (j == 0 and line != ""):
+                elif (j == 0 and line != ''):
                     new_file.write(line)
                 else:
-                    new_file.write("\n")
+                    new_file.write('\n')
                     new_file.write(line)
                         
                 j += 1
-                    
-            if (type(line) is list):
+            elif (type(line) is list):
                 if (len(line) == 0):
                     pass
                 elif (j == 0 and len(line) != 0):
-
                     while (i < len(line) - 1):
                         if (type(line[i]) is not str):
-                            raise TypeError("A value in the list argument isn't a string!")
+                            raise TypeError("A value in the lines argument list isn't a string.")
 
                         new_file.write(line[i])
-                        new_file.write("\n")
+                        new_file.write('\n')
                         i += 1
 
                     new_file.write(line[i])
-                    i = int(0)
+                    i = 0
                 else:
-                    new_file.write("\n")
-
+                    new_file.write('\n')
                     while (i < len(line) - 1):
                         if (type(line[i]) is not str):
-                            raise TypeError("A value in the list argument isn't a string!")
+                            raise TypeError("A value in the lines argument list isn't a string.")
 
                         new_file.write(line[i])
-                        new_file.write("\n")
+                        new_file.write('\n')
                         i += 1
 
                     new_file.write(line[i])
-                    i = int(0)
+                    i = 0
 
                 j += 1
+            else:
+                raise TypeError('Each value in the lines argument must be a string or a list of strings.')
                 
         new_file.close()
 '''
@@ -418,38 +443,39 @@ def writelines(filepath, *lines):
         - The filepath argument must be a string.
 '''
 def appendlines(filepath, *lines):
-    i = int(0)
+    i = 0
 
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
      
     if (path_exists(filepath) == False):
-        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+        raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
     if (isfile(filepath) == False):
-        raise ValueError("The given file path " + str(filepath) + " isn't a file!")
+        raise ValueError(f"Given path {filepath} isn't a file.")
 
-    with open(filepath, "at") as new_file:
+    with open(filepath, 'at') as new_file:
         for line in lines:      
-            if (type(line) is not str and type(line) is not list):
-                raise ValueError("The line argument must be a string or a list of strings!")
-
             if (type(line) is str):        
-                new_file.write("\n")
-                new_file.write(line)
-                        
-            if (type(line) is list):
+                new_file.write('\n')
+                new_file.write(line)           
+            elif (type(line) is list):
                 if (len(line) == 0):
                     pass
                 else: 
-                    new_file.write("\n")
+                    new_file.write('\n')
                     while (i < len(line) - 1):
-                        new_file.write (str(line[i]))
-                        new_file.write("\n")
+                        if (type(line[i]) is not str):
+                            raise TypeError("A value in the lines argument list isn't a string.")
+                        
+                        new_file.write(line[i])
+                        new_file.write('\n')
                         i += 1
 
                     new_file.write(line[i])
-                    i = int(0)             
+                    i = 0
+            else:
+                raise TypeError('Each value in the lines argument must be a string or a list of strings.')     
                                          
         new_file.close()
 
@@ -459,11 +485,11 @@ def appendlines(filepath, *lines):
 '''
 def path_exists(filepath):  
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
 
     if (os.path.exists(filepath) == True):
         return True
-    elif (os.path.exists(filepath) == False):
+    else:
         return False
 
 '''
@@ -472,11 +498,14 @@ def path_exists(filepath):
 '''
 def isfile(filepath):
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
+    
+    if (path_exists(filepath) == False):
+       raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
     if (os.path.isfile(filepath) == True):
         return True
-    elif (os.path.isfile(filepath) == False):
+    else:
         return False
 
 '''
@@ -485,11 +514,14 @@ def isfile(filepath):
 '''
 def isdir(filepath):
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
+    
+    if (path_exists(filepath) == False):
+       raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
     if (os.path.isdir(filepath) == True):
         return True
-    elif (os.path.isdir(filepath) == False):
+    else:
         return False
 
 '''
@@ -498,11 +530,14 @@ def isdir(filepath):
 '''
 def istar(filepath):
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
+    
+    if (path_exists(filepath) == False):
+       raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
     if (tarfile.is_tarfile(filepath) == True):
         return True
-    elif (tarfile.is_tarfile(filepath) == False):
+    else:
         return False
 '''
     Return boolean value (True or False) to check if filepath argument is a zip archive.
@@ -510,11 +545,14 @@ def istar(filepath):
 '''
 def iszip(filepath):
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
+    
+    if (path_exists(filepath) == False):
+       raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
     if (zipfile.is_zipfile(filepath) == True):
         return True
-    elif (zipfile.is_zipfile(filepath) == False):
+    else:
         return False
 
 '''
@@ -527,7 +565,7 @@ def iszip(filepath):
             2. Two lists of equal length consisting of strings
 '''
 def ren(current_filepath, desired_filepath):
-    i = int(0)
+    i = 0
 
     if (type(current_filepath) is not type(desired_filepath)):
         raise TypeError("The current_filepath and desired_filepath arguments must be the same type.")
@@ -547,19 +585,19 @@ def ren(current_filepath, desired_filepath):
                 raise TypeError(f"Both current_filepath and desired_filepath lists may contain only strings.")
 
             if (path_exists(current_filepath[i]) == False):
-                raise FileNotFoundError(f"Given file path ${current_filepath[i]} doesn't exist.")
+                raise FileNotFoundError(f"Given path {current_filepath[i]} doesn't exist.")
 
             if (path_exists(desired_filepath[i]) == True):
-                raise FileExistsError(f"Given file path ${desired_filepath[i]} already exists.")
+                raise FileExistsError(f"Given path {desired_filepath[i]} already exists.")
 
             os.rename(current_filepath[i], desired_filepath[i])
             i += 1
     else:
         if (path_exists(current_filepath) == False):
-            raise FileNotFoundError(f"Given file path ${current_filepath} doesn't exist.")
+            raise FileNotFoundError(f"Given path {current_filepath} doesn't exist.")
 
         if (path_exists(desired_filepath) == True):
-            raise FileExistsError(f"Given file path ${desired_filepath} already exists.")
+            raise FileExistsError(f"Given path {desired_filepath} already exists.")
 
         os.rename(current_filepath, desired_filepath)
 
@@ -567,27 +605,26 @@ def ren(current_filepath, desired_filepath):
     Create a tar archive with gzip compression & .gz extension.
 '''
 def tar_wrap(filepath):
-    arcpath = str(filepath + ".tar.gz")
-    dirpaths = list([])
-    filepaths = list([])
-
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
 
     if (path_exists(filepath) == False):
-        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+        raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
     if (isdir(filepath) == False):
-        raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
+        raise ValueError(f"Given path {filepath} isn't a directory.")
 
+    arcpath = filepath + '.tar.gz'
     if (path_exists(arcpath) == True):
-        raise FileExistsError("The archive" + arcpath + "already exists!")
+        raise FileExistsError(f"The archive {arcpath} already exists.")
 
+    dirpaths = list([])
+    filepaths = list([])
     for root, dirs, files in os.walk(filepath, topdown=True):
         for path in dirs:
-            dirpaths.append(str(os.path.join(root, path)))
+            dirpaths.append(os.path.join(root, path))
         for path in files:
-            filepaths.append(str(os.path.join(root, path)))
+            filepaths.append(os.path.join(root, path))
 
     dirpaths.sort(); filepaths.sort()
 
@@ -604,16 +641,16 @@ def tar_wrap(filepath):
 '''
 def tar_extract(filepath):
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
 
     if (path_exists(filepath) == False):
-        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+        raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
     if (istar(filepath) == False or str(filepath).endswith(".tar.gz") == False):
-        raise FileNotFoundError("The given file path isn't a .tar.gz archive!")
+        raise ValueError(f"Given path {filepath} isn't a .tar.gz archive.")
 
     if (path_exists(str(filepath).strip(".tar.gz")) == True):
-        raise FileExistsError("The extraction directory already exists!")
+        raise FileExistsError("The extraction directory already exists.")
 
     with tarfile.open(name=filepath, mode='r:gz') as archive:
         archive.extractall()
@@ -623,31 +660,30 @@ def tar_extract(filepath):
     Create a zip archive with DEFLATE compression.
 '''
 def zip_wrap(filepath):
-    arcpath = str(filepath + ".zip")
-    dirpaths = list([])
-    filepaths = list([])
-
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
 
     if (path_exists(filepath) == False):
-        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+        raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
     if (isdir(filepath) == False):
-        raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
+        raise ValueError(f"Given path {filepath} isn't a directory.")
 
+    arcpath = filepath + '.zip'
     if (path_exists(arcpath) == True):
-        raise FileExistsError("The archive" + arcpath + "already exists!")
+        raise FileExistsError(f"The archive {arcpath} already exists.")
 
+    dirpaths = list([])
+    filepaths = list([])
     for root, dirs, files in os.walk(filepath, topdown=True):
         for path in dirs:
-            dirpaths.append(str(os.path.join(root, path)))
+            dirpaths.append(os.path.join(root, path))
         for path in files:
-            filepaths.append(str(os.path.join(root, path)))
+            filepaths.append(os.path.join(root, path))
 
     dirpaths.sort(); filepaths.sort()
 
-    with zipfile.ZipFile(arcpath, mode="w", compression=zipfile.ZIP_DEFLATED) as archive:
+    with zipfile.ZipFile(arcpath, mode='w', compression=zipfile.ZIP_DEFLATED) as archive:
         for file in dirpaths:
             archive.write(file)
 
@@ -661,18 +697,18 @@ def zip_wrap(filepath):
 '''
 def zip_extract(filepath):
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
 
     if (path_exists(filepath) == False):
-        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+        raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
     if (iszip(filepath) == False or str(filepath).endswith(".zip") == False):
-        raise FileNotFoundError("The given file path isn't a .zip archive!")
+        raise ValueError(f"Given path {filepath} isn't a .zip archive.")
 
-    if (path_exists(str(filepath).strip(".tar.gz")) == True):
-        raise FileExistsError("The extraction directory already exists!")
+    if (path_exists(str(filepath).strip(".zip")) == True):
+        raise FileExistsError("The extraction directory already exists.")
 
-    with zipfile.ZipFile(filepath, mode="r", compression=zipfile.ZIP_DEFLATED) as archive:
+    with zipfile.ZipFile(filepath, mode='r', compression=zipfile.ZIP_DEFLATED) as archive:
         archive.extractall()
         archive.close()
 
@@ -680,24 +716,24 @@ def zip_extract(filepath):
     Count and return the number of files within a directory.
 '''
 def filecount(filepath):
+    count = 0
+
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
 
     if (path_exists(filepath) == False):
-        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+        raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
-    if (isdir(filepath) == False and filepath != ".."):
-        raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
+    if (isdir(filepath) == False):
+        raise ValueError(f"Given path {filepath} isn't a directory.")
 
+    contents = lsdir(filepath)
     working_directory = wdir()
-    count = int(0)
-    contents = list(lsdir(filepath))
-    chdir(filepath)
 
+    chdir(filepath)
     for item in contents:
         if (isfile(item) == True):
             count += 1
-    
     chdir(working_directory)
 
     return count
@@ -706,24 +742,24 @@ def filecount(filepath):
     Count and return the number of directories within a directory.
 '''
 def dircount(filepath):
+    count = 0
+
     if (type(filepath) is not str):
-        raise TypeError("The given file path " + str(filepath) + " isn't a string!")
+        raise TypeError(f"Given path {filepath} isn't a string.")
 
     if (path_exists(filepath) == False):
-        raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+        raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
-    if (isdir(filepath) == False and filepath != ".."):
-        raise ValueError("The given file path " + str(filepath) + " isn't a directory!")
+    if (isdir(filepath) == False):
+        raise ValueError(f"Given path {filepath} isn't a directory.")
 
+    contents = lsdir(filepath)
     working_directory = wdir()
-    count = int(0)
-    contents = list(lsdir(filepath))
-    chdir(filepath)
 
+    chdir(filepath)
     for item in contents:
         if (isdir(item) == True):
             count += 1
-    
     chdir(working_directory)
 
     return count
@@ -732,11 +768,14 @@ def dircount(filepath):
     Get the total combined size in bytes of the file paths & directories within the *filepaths argument.
 '''
 def size(*filepaths):
-    size = int(0)
+    size = 0
 
     for filepath in filepaths:
+        if (type(filepath) is not str):
+            raise TypeError(f"Given path {filepath} isn't a string.")
+        
         if (path_exists(filepath) == False):
-            raise FileNotFoundError("The given file path " + str(filepath) + " doesn't exist!")
+            raise FileNotFoundError(f"Given path {filepath} doesn't exist.")
 
         if (isfile(filepath) == True):
             size += os.path.getsize(filepath)

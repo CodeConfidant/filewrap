@@ -2,7 +2,7 @@
 
     Python package for file/directory/archive management.
 
-    Make sure to have the latest version of Python 3 installed although this should work with previous versions. 
+    Python version 3.6 is required at a minimum. 
 
     To install/update the package with pip enter command in terminal:
         pip install filewrap
@@ -12,12 +12,12 @@
 
     Built-in modules used: os, tarfile, zipfile
 
-<table width="100%">
+<table width='100%'>
 	<tr>
-		<th align="left">
+		<th align='left'>
             Method
         </th>
-		<th align="left">
+		<th align='left'>
             Description
         </th>
 	</tr>
@@ -49,7 +49,7 @@
 	</tr>
     <tr>
 		<td>
-            <code>write(filepath, data)</code>
+            <code>write(data, filepath)</code>
         </td>
 		<td>
             Write bytes object to a file. <br/>
@@ -63,7 +63,7 @@
         </td>
 		<td>
             Read and print lines in single/multiple text/binary based files. <br/>
-            The mode argument must be either strings: "t" (text) or "b" (binary). <br/>
+            The mode argument must be either strings: 't' (text) or 'b' (binary). <br/>
             The *filepaths arguments must be strings.
         </td>
 	</tr>
@@ -82,7 +82,7 @@
         </td>
 		<td>
             Make single/multiple text/binary based files. <br/>
-            The mode argument must be either strings: "t" (text) or "b" (binary). <br/>
+            The mode argument must be either strings: 't' (text) or 'b' (binary). <br/>
             The *filepaths arguments must be strings.
         </td>
 	</tr>
